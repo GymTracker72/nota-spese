@@ -312,7 +312,7 @@ input[readonly]{background:var(--g0);color:var(--g5)}
 <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <script src="https://unpkg.com/tesseract.js@5.0.4/dist/tesseract.min.js"></script>
 <script>
-const S = { pdfBytes:null, dati:{}, scontrini:[], pdfOut:null, worker:null };
+const S = { pdfBytes:null, dati:{}, scontrini:[], pdfOut:null, worker:null, nomeFileOriginale:'' };
 
 // Coordinate PDF (da pdfplumber, y=H-bottom+1)
 const C = {
@@ -352,6 +352,7 @@ async function caricaModulo(e) {
   const f = e.target.files[0]; if (!f) return;
   try {
     S.pdfBytes = await f.arrayBuffer();
+    S.nomeFileOriginale = f.name.replace(/\.pdf$/i,'');
     // Usa pdf-lib per estrarre testo dai campi del PDF
     const { PDFDocument } = PDFLib;
     const doc = await PDFDocument.load(S.pdfBytes);
@@ -820,7 +821,7 @@ function scarica(){
   const url=URL.createObjectURL(new Blob([S.pdfOut],{type:'application/pdf'}));
   const a=document.createElement('a');
   a.href=url;
-  a.download=`Nota_Spese_${S.dati.nr||'ENAV'}.pdf`;
+  a.download=(S.nomeFileOriginale||`Nota_Spese_${S.dati.nr||'ENAV'}`)+'.pdf';
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -829,7 +830,7 @@ function apriStampa(){
   window.open(URL.createObjectURL(new Blob([S.pdfOut],{type:'application/pdf'})),'_blank');
 }
 function ricomincia(){
-  S.pdfBytes=null;S.dati={};S.scontrini=[];S.pdfOut=null;
+  S.pdfBytes=null;S.dati={};S.scontrini=[];S.pdfOut=null;S.nomeFileOriginale='';
   document.getElementById('inp-mod').value='';
   document.getElementById('dati-form').style.display='none';
   document.getElementById('lista-sc').innerHTML='';
