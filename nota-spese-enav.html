@@ -276,10 +276,10 @@ input[readonly]{background:var(--g0);color:var(--g5)}
           <button class="btn ver" style="margin-top:0" onclick="scaricaModulo()">⬇ Scarica Modulo B</button>
           <button class="btn out" style="margin-top:6px;border-color:var(--ver);color:var(--ver)" onclick="apriModulo()">🖨 Apri Modulo B</button>
         </div>
-        <div style="background:var(--blul);border-radius:8px;padding:12px;margin-top:8px">
+        <div id="all-section" style="background:var(--blul);border-radius:8px;padding:12px;margin-top:8px">
           <div style="font-size:12px;font-weight:600;color:var(--blu);margin-bottom:6px">📎 Allegati scontrini</div>
-          <button class="btn blu" style="margin-top:0" onclick="scaricaAllegati()">⬇ Scarica Allegati</button>
-          <button class="btn out" style="margin-top:6px" onclick="apriAllegati()">🖨 Apri Allegati</button>
+          <button class="btn blu" style="margin-top:0" ontouchstart="" onclick="scaricaAllegati()">⬇ Scarica Allegati</button>
+          <button class="btn out" style="margin-top:6px" ontouchstart="" onclick="apriAllegati()">🖨 Apri Allegati</button>
         </div>
         <button class="btn out" onclick="vai(3)" style="margin-top:8px">✏️ Modifica</button>
         <button class="btn out" onclick="vai(2)" style="margin-top:8px">📎 Aggiungi scontrini</button>
@@ -849,6 +849,8 @@ async function generaPdf(){
   document.getElementById('card-fin').style.display='none';
   try{
     const{PDFDocument,rgb,StandardFonts}=PDFLib;
+
+    // ── PDF MODULO: compila il modulo B ──────────────────────────────────
     const doc=await PDFDocument.load(S.pdfBytes);
     const pg=doc.getPages()[0];
     const font=await doc.embedFont(StandardFonts.Helvetica);
@@ -873,13 +875,18 @@ async function generaPdf(){
     pg.drawText(km.toString(),{x:C.kmX,y:C.kmY,font,size:sz,color:nero});
     const note=document.getElementById('v-note').value||'';
     if(note)pg.drawText(note.substring(0,120),{x:C.notX,y:C.notY,font,size:sz,color:nero});
-    // Firma
     try{
       const fb=b64bytes(FIRMA_B64.split(',')[1]);
       const fi=await doc.embedPng(fb);
       pg.drawImage(fi,{x:370,y:258,width:160,height:50});
     }catch(e){}
-    // Allegati → vanno nel PDF separato
+    S.pdfModulo=await doc.save();
+    S.pdfOut=S.pdfModulo;
+
+    // ── PDF ALLEGATI: crea PDF separato con gli scontrini ────────────────
+    const docAll=await PDFDocument.create();
+    const fontAll=await docAll.embedFont(StandardFonts.Helvetica);
+    let hasAllegati=false;
     for(const sc of S.scontrini){
       if(sc.tipo==='application/pdf'&&sc.file){
         try{
@@ -904,30 +911,19 @@ async function generaPdf(){
         }catch{pagFB(docAll,sc,fontAll,rgb);hasAllegati=true;}
       }
     }
-    // Salva PDF allegati
-    if(hasAllegati){
-      S.pdfAllegati = await docAll.save();
-    } else {
-      S.pdfAllegati = null;
-    }
-    // PDF 2: solo allegati (dichiarato prima per evitare errori di scope)
-  const docAll = await PDFDocument.create();
-  const fontAll = await docAll.embedFont(StandardFonts.Helvetica);
-  let hasAllegati = false;
+    S.pdfAllegati=hasAllegati?await docAll.save():null;
 
-  // PDF 1: solo modulo compilato (senza allegati)
-  S.pdfModulo = await doc.save();
-  S.pdfOut = S.pdfModulo; // compatibilità
+    // ── MOSTRA RISULTATI ─────────────────────────────────────────────────
     document.getElementById('pdf-spin').style.display='none';
     document.getElementById('pdf-act').style.display='block';
-    // Nascondi sezione allegati se non ci sono
-    const allDiv=document.getElementById('pdf-act').querySelectorAll('div')[1];
-    if(allDiv)allDiv.style.display=S.pdfAllegati?'block':'none';
     document.getElementById('pdf-ico').textContent='✅';
     document.getElementById('pdf-tit').textContent='PDF pronto!';
     const ns=S.scontrini.filter(s=>s.dataUrl||s.file).length;
     document.getElementById('pdf-sub').textContent=
-      `Modulo B compilato · ${S.pdfAllegati?ns+' allegat'+(ns!==1?'i':'o')+' separati':'nessun allegato'}`;
+      `Modulo compilato · ${S.pdfAllegati?ns+' allegat'+(ns!==1?'i':'o')+' separati':'nessun allegato'}`;
+    // Mostra/nascondi sezione allegati
+    const allSection=document.getElementById('all-section');
+    if(allSection)allSection.style.display=S.pdfAllegati?'block':'none';
     renderFin();autoSave();
   }catch(err){
     document.getElementById('pdf-spin').style.display='none';
