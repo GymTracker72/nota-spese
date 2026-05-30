@@ -56,8 +56,8 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-se
   text-align:center;cursor:pointer;background:var(--g0)}
 .uzone:active{border-color:var(--blu)}
 .uzone input{display:none}
-.uzone-allegato{border-color:var(--amb);background:var(--ambl)}
-.uzone-allegato:active{border-color:var(--amb)}
+.uzone-all{border-color:var(--amb);background:var(--ambl)}
+.uzone-all:active{border-color:var(--amb)}
 .igrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 @media(max-width:400px){.igrid{grid-template-columns:1fr}}
 .iitem{background:var(--g0);border-radius:8px;padding:9px 12px}
@@ -74,7 +74,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blu);
 textarea{resize:vertical;min-height:60px}
 .sc-card{background:#fff;border:1px solid var(--g2);border-radius:var(--r);
   margin-bottom:8px;overflow:hidden}
-.sc-card.allegato-puro{border-color:var(--amb);border-left:3px solid var(--amb)}
+.sc-card.allegato-puro{border-left:3px solid var(--amb)}
 .sc-head{display:flex;align-items:center;gap:10px;padding:11px 13px}
 .sc-thumb{width:52px;height:52px;border-radius:6px;object-fit:cover;
   border:1px solid var(--g2);flex-shrink:0;background:var(--g1);
@@ -102,16 +102,23 @@ textarea{resize:vertical;min-height:60px}
 .aerr{background:var(--rosl);color:var(--ros)}
 .aok{background:var(--verl);color:var(--ver)}
 .ainfo{background:var(--blul);color:var(--blu)}
+.ocr-raw{font-size:10px;color:var(--g5);background:var(--g0);border-radius:6px;
+  padding:6px;margin-top:6px;max-height:80px;overflow-y:auto;white-space:pre-wrap;display:none}
 @keyframes spin{to{transform:rotate(360deg)}}
 .spinner{width:16px;height:16px;border:2px solid var(--blum);
   border-top-color:var(--blu);border-radius:50%;animation:spin .7s linear infinite}
-.ocr-raw{font-size:10px;color:var(--g5);background:var(--g0);border-radius:6px;
-  padding:6px;margin-top:6px;max-height:80px;overflow-y:auto;white-space:pre-wrap;display:none}
+
+/* Progress OCR */
+.ocr-prog-wrap{background:var(--blul);border-radius:8px;padding:10px 12px;
+  margin-top:8px;font-size:12px;color:var(--blu);display:none}
+.ocr-prog-bar{height:3px;background:var(--blum);border-radius:2px;margin-top:6px}
+.ocr-prog-fill{height:3px;background:var(--blu);border-radius:2px;
+  transition:width .3s;width:0%}
 </style>
 </head>
 <body>
 
-<!-- ══ S1 — MODULO B ══ -->
+<!-- ══ S1 ══ -->
 <div id="s1" class="screen active">
   <div class="topbar"><h1>Nota Spese ENAV</h1></div>
   <div class="content">
@@ -135,7 +142,7 @@ textarea{resize:vertical;min-height:60px}
   </div>
 </div>
 
-<!-- ══ S2 — SCONTRINI ══ -->
+<!-- ══ S2 ══ -->
 <div id="s2" class="screen">
   <div class="topbar">
     <button class="back" onclick="vai(1)">‹</button>
@@ -154,11 +161,11 @@ textarea{resize:vertical;min-height:60px}
     <div id="alert-sc"></div>
     <div class="card" id="card-riepilogo"></div>
 
-    <!-- Upload CON OCR -->
     <div class="card">
       <h3>📸 Scontrini con OCR automatico</h3>
       <p style="font-size:13px;color:var(--g6);margin-bottom:10px">
-        Google Vision estrae importo, data e categoria automaticamente.
+        OCR legge importo, data e classifica la categoria in automatico.
+        Funziona offline su tutti i dispositivi.
       </p>
       <div class="uzone" onclick="document.getElementById('inp-sc').click()">
         <input type="file" id="inp-sc" accept="image/*,application/pdf"
@@ -167,15 +174,18 @@ textarea{resize:vertical;min-height:60px}
         <div style="font-size:14px;font-weight:600;color:var(--g9);margin-bottom:2px">Aggiungi con OCR</div>
         <div style="font-size:12px;color:var(--g5)">Foto / PDF · analisi automatica</div>
       </div>
+      <div id="ocr-global-prog" class="ocr-prog-wrap">
+        <span id="ocr-global-msg">OCR in corso...</span>
+        <div class="ocr-prog-bar"><div class="ocr-prog-fill" id="ocr-global-fill"></div></div>
+      </div>
     </div>
 
-    <!-- Upload SENZA OCR — solo allegato -->
     <div class="card">
       <h3>📎 Allegati aggiuntivi <span style="font-size:11px;font-weight:400;color:var(--amb)">(senza OCR)</span></h3>
       <p style="font-size:13px;color:var(--g6);margin-bottom:10px">
-        Foto o documenti da allegare al PDF senza analisi automatica.
+        Foto da allegare al PDF senza analisi automatica.
       </p>
-      <div class="uzone uzone-allegato" onclick="document.getElementById('inp-all').click()">
+      <div class="uzone uzone-all" onclick="document.getElementById('inp-all').click()">
         <input type="file" id="inp-all" accept="image/*,application/pdf"
           multiple onchange="aggiungiAllegato(event)">
         <div style="font-size:30px;margin-bottom:5px">📎</div>
@@ -193,7 +203,7 @@ textarea{resize:vertical;min-height:60px}
   </div>
 </div>
 
-<!-- ══ S3 — VERIFICA ══ -->
+<!-- ══ S3 ══ -->
 <div id="s3" class="screen">
   <div class="topbar">
     <button class="back" onclick="vai(2)">‹</button>
@@ -255,7 +265,7 @@ textarea{resize:vertical;min-height:60px}
   </div>
 </div>
 
-<!-- ══ S4 — PDF ══ -->
+<!-- ══ S4 ══ -->
 <div id="s4" class="screen">
   <div class="topbar">
     <button class="back" onclick="vai(3)">‹</button>
@@ -275,9 +285,7 @@ textarea{resize:vertical;min-height:60px}
     <div class="card" style="text-align:center;padding:30px 18px">
       <div style="font-size:52px;margin-bottom:10px" id="pdf-ico">⏳</div>
       <div style="font-size:18px;font-weight:600;margin-bottom:8px" id="pdf-tit">Generazione...</div>
-      <div style="font-size:13px;color:var(--g6);margin-bottom:18px" id="pdf-sub">
-        Compilazione Nota Spese e allegati in corso...
-      </div>
+      <div style="font-size:13px;color:var(--g6);margin-bottom:18px" id="pdf-sub">Compilazione in corso...</div>
       <div id="pdf-spin" style="display:flex;align-items:center;justify-content:center;
         gap:10px;color:var(--blu);font-size:14px">
         <div class="spinner"></div> Elaborazione PDF...
@@ -286,6 +294,7 @@ textarea{resize:vertical;min-height:60px}
         <button class="btn ver" onclick="scarica()">⬇ Scarica PDF</button>
         <button class="btn out" onclick="apriStampa()" style="margin-top:8px">🖨 Apri / Stampa</button>
         <button class="btn out" onclick="vai(3)" style="margin-top:8px">✏️ Torna a modificare</button>
+        <button class="btn out" onclick="vai(2)" style="margin-top:8px">📎 Aggiungi altri scontrini</button>
         <button class="btn gri" onclick="ricomincia()" style="margin-top:8px">↺ Nuova nota spese</button>
       </div>
     </div>
@@ -296,30 +305,23 @@ textarea{resize:vertical;min-height:60px}
   </div>
 </div>
 
+<!-- Canvas nascosto per preprocessing immagini -->
+<canvas id="cv" style="display:none"></canvas>
+
 <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://unpkg.com/tesseract.js@5.0.4/dist/tesseract.min.js"></script>
 <script>
 // ═══════════════════════════════════
-// API KEY — hardcodata, non serve inserirla
+// STATO
 // ═══════════════════════════════════
-const GKEY = 'AIzaSyA8VuVp8jaJS3p7zEmzQMccwy1UvYZLW6g';
+const S = { pdfBytes:null, dati:{}, scontrini:[], pdfOut:null, ocrWorker:null };
 
-// ═══════════════════════════════════
-// STATO — persiste durante tutta la sessione
-// ═══════════════════════════════════
-const S = { pdfBytes:null, dati:{}, scontrini:[], pdfOut:null };
-
-// Coordinate ESATTE ricavate da pdfplumber (y = H - bottom + 1)
 const C = {
-  partX:170, partY:362.74,
-  rienX:395, rienY:364.99,
-  pernX:18,  pernY:348.49,
-  albY:330.56, vitY:321.26, titY:311.96,
-  taxY:302.67, kmY:284.08,
-  nolY:274.78, parY:265.48, pedY:256.19,
-  notY:231.04,
-  impX:163,  // x importi (dopo simbolo €)
-  kmX:248,   // x valore KM (solo numero)
-  notX:42,   // x testo note
+  partX:170, partY:362.74, rienX:395, rienY:364.99,
+  pernX:18, pernY:348.49,
+  albY:330.56, vitY:321.26, titY:311.96, taxY:302.67,
+  kmY:284.08, nolY:274.78, parY:265.48, pedY:256.19,
+  notY:231.04, impX:163, kmX:248, notX:42,
 };
 
 const CATS = {
@@ -333,13 +335,28 @@ const CATS = {
 };
 
 // ═══════════════════════════════════
-// NAVIGAZIONE — mantiene i dati
+// INIT TESSERACT WORKER (una volta sola)
+// ═══════════════════════════════════
+async function getWorker() {
+  if (!S.ocrWorker) {
+    S.ocrWorker = await Tesseract.createWorker('ita+eng', 1, {
+      workerPath: 'https://unpkg.com/tesseract.js@5.0.4/dist/worker.min.js',
+      langPath: 'https://tessdata.projectnaptha.com/4.0.0',
+      corePath: 'https://unpkg.com/tesseract.js-core@5.0.0/tesseract-core-simd-lstm.wasm.js',
+      logger: () => {}
+    });
+  }
+  return S.ocrWorker;
+}
+
+// ═══════════════════════════════════
+// NAVIGAZIONE
 // ═══════════════════════════════════
 async function vai(n) {
   if (n === 3) { prepVerifica(); return; }
   if (n === 4) { showScreen('s4'); await generaPdf(); return; }
-  showScreen('s' + n);
-  if (n === 2) renderLista(); // ricarica lista quando si torna allo step 2
+  showScreen('s'+n);
+  if (n === 2) { renderLista(); aggBtn3(); }
 }
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -361,6 +378,8 @@ async function caricaModulo(e) {
     mostraPreview();
     document.getElementById('btn-s2').style.display = 'block';
     showAlert('alert-mod','ok','✓ Modulo caricato');
+    // Pre-carica Tesseract in background
+    getWorker().catch(()=>{});
   } catch(err) { showAlert('alert-mod','err','Errore: '+err.message); }
 }
 
@@ -368,8 +387,8 @@ function parseDati(raw) {
   const dates = [...raw.matchAll(/(\d{2}\/\d{2}\/\d{2})/g)].map(m=>m[1]);
   return {
     nr: (raw.match(/147228/) || raw.match(/(\d{6,8})/))?.[0] || '147228',
-    dipendente: 'PROPATO LUISA', matricola: '11042',
-    dest: 'ROMA FIUMICINO TOLOSA',
+    dipendente:'PROPATO LUISA', matricola:'11042',
+    dest:'ROMA FIUMICINO TOLOSA',
     partPrev: dates[0]||'15/01/26', rientPrev: dates[1]||'16/01/26',
   };
 }
@@ -398,147 +417,144 @@ function mostraPreview() {
 }
 
 // ═══════════════════════════════════
-// S2 — SCONTRINI CON OCR
+// S2 — UPLOAD E OCR
 // ═══════════════════════════════════
 async function aggiungiOcr(e) {
   const files = Array.from(e.target.files); if (!files.length) return;
   e.target.value = '';
+  const nuovi = [];
   for (const f of files) {
-    const sc = await creaOggScontrino(f, true);
+    const sc = await creaOgg(f, false);
     S.scontrini.push(sc);
-    renderLista();
-    await ocrVision(sc);
+    nuovi.push(sc);
   }
-  aggBtn3();
+  renderLista();
+  // OCR in sequenza con progress globale
+  const prog = document.getElementById('ocr-global-prog');
+  const fill = document.getElementById('ocr-global-fill');
+  const msg = document.getElementById('ocr-global-msg');
+  prog.style.display = 'block';
+  for (let i=0; i<nuovi.length; i++) {
+    msg.textContent = `OCR ${i+1}/${nuovi.length}: ${nuovi[i].nome}`;
+    fill.style.width = `${(i/nuovi.length)*100}%`;
+    await ocrTesseract(nuovi[i]);
+    fill.style.width = `${((i+1)/nuovi.length)*100}%`;
+  }
+  prog.style.display = 'none';
+  renderLista(); aggBtn3(); aggTot();
 }
 
-// Upload SENZA OCR — solo allegato
 async function aggiungiAllegato(e) {
   const files = Array.from(e.target.files); if (!files.length) return;
   e.target.value = '';
   for (const f of files) {
-    const sc = await creaOggScontrino(f, false);
-    sc.soloAllegato = true;
-    sc.ocrDone = true; // non serve OCR
+    const sc = await creaOgg(f, true);
     S.scontrini.push(sc);
   }
-  renderLista();
-  aggBtn3();
+  renderLista(); aggBtn3();
 }
 
-async function creaOggScontrino(f, hasOcr) {
-  const id = 'sc_' + Date.now() + '_' + Math.random().toString(36).slice(2,5);
-  const sc = {
-    id, file:f, nome:f.name, tipo:f.type,
+async function creaOgg(f, soloAllegato) {
+  const id = 'sc_'+Date.now()+'_'+Math.random().toString(36).slice(2,5);
+  const sc = { id, file:f, nome:f.name, tipo:f.type,
     dataUrl:null, cat:'VITTO', importo:0, data:'', fornitore:'',
-    ocrDone:false, soloAllegato:false, ocrTesto:''
-  };
+    ocrDone:soloAllegato, soloAllegato, ocrTesto:'' };
   if (f.type.startsWith('image/')) sc.dataUrl = await toDataUrl(f);
   return sc;
 }
 
-// OCR con Google Vision
-async function ocrVision(sc) {
-  setSts(sc.id, 'proc', '⏳ OCR in corso...');
-  try {
-    let b64 = '';
-    if (sc.tipo.startsWith('image/')) {
-      b64 = sc.dataUrl.split(',')[1];
-    } else {
-      const ab = await sc.file.arrayBuffer();
-      const bytes = new Uint8Array(ab);
-      let bin = '';
-      for (let i=0; i<bytes.length; i++) bin += String.fromCharCode(bytes[i]);
-      b64 = btoa(bin);
-    }
-
-    const resp = await fetch(
-      `https://vision.googleapis.com/v1/images:annotate?key=${GKEY}`,
-      { method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ requests:[{
-          image:{content:b64},
-          features:[{type:'TEXT_DETECTION',maxResults:1}]
-        }]})
+// ── Preprocessing immagine per migliorare OCR ──────────────────────────────
+function preprocessImmagine(dataUrl) {
+  return new Promise(res => {
+    const img = new Image();
+    img.onload = () => {
+      const cv = document.getElementById('cv');
+      // Ridimensiona se troppo grande (max 2000px lato lungo)
+      let w = img.width, h = img.height;
+      const MAX = 2000;
+      if (w > MAX || h > MAX) {
+        if (w > h) { h = Math.round(h*MAX/w); w = MAX; }
+        else { w = Math.round(w*MAX/h); h = MAX; }
       }
-    );
-    const js = await resp.json();
+      cv.width = w; cv.height = h;
+      const ctx = cv.getContext('2d');
+      ctx.filter = 'contrast(1.4) brightness(1.1)';
+      ctx.drawImage(img, 0, 0, w, h);
+      res(cv.toDataURL('image/jpeg', 0.95));
+    };
+    img.src = dataUrl;
+  });
+}
 
-    if (js.error) throw new Error(js.error.message);
-    const testo = js.responses?.[0]?.fullTextAnnotation?.text || '';
-    if (!testo) throw new Error('Nessun testo rilevato');
+// ── OCR con Tesseract ──────────────────────────────────────────────────────
+async function ocrTesseract(sc) {
+  setSts(sc.id,'proc','⏳ OCR in corso...');
+  try {
+    const worker = await getWorker();
+    let imgSrc = sc.dataUrl;
+    if (imgSrc) imgSrc = await preprocessImmagine(imgSrc);
+    else imgSrc = sc.file; // PDF: passa il file direttamente
+
+    const { data } = await worker.recognize(imgSrc);
+    const testo = data.text || '';
+    if (!testo.trim()) throw new Error('Testo non leggibile');
 
     sc.ocrTesto = testo;
+    sc.ocrDone = true;
     const est = parseOcr(testo, sc.nome);
-    sc.importo   = est.importo;
-    sc.data      = est.data;
+    sc.importo = est.importo;
+    sc.data = est.data;
     sc.fornitore = est.fornitore;
-    sc.cat       = est.cat;
-    sc.ocrDone   = true;
+    sc.cat = est.cat;
 
     if (sc.cat === 'TITOLI_VIAGGIO' && est.data) precompilaDt(est.data);
-
-    setSts(sc.id, 'ok', '✓ OCR completato');
-    renderLista(); aggBtn3(); aggTot();
-
+    setSts(sc.id,'ok',`✓ OCR: €${sc.importo.toFixed(2)} · ${CATS[sc.cat]?.lbl||sc.cat}`);
   } catch(err) {
     sc.ocrDone = true;
-    setSts(sc.id, 'warn', '⚠ ' + (err.message||'Errore') + ' — modifica manualmente');
-    renderLista(); aggBtn3();
+    setSts(sc.id,'warn','⚠ '+err.message+' — modifica manualmente');
   }
 }
 
-// Parser OCR robusto — gestisce italiano, francese, fiammingo
+// ── Parser OCR robusto ────────────────────────────────────────────────────
 function parseOcr(testo, nome) {
-  // ── IMPORTO ────────────────────────────────────────────────────
-  // Normalizza prima: sostituisce virgola con punto
   const T = testo;
-  let importo = 0;
 
-  // 1. Cerca pattern "TOTALE / Total / Montant / Bedrag" + numero
-  const patsTot = [
-    /totale[:\s]*([0-9]+[,\.][0-9]{2})/i,
-    /total[:\s]*([0-9]+[,\.][0-9]{2})/i,
-    /montant[:\s]*([0-9]+[,\.][0-9]{2})/i,
-    /bedrag[:\s]*([0-9]+[,\.][0-9]{2})/i,
-    /amount[:\s]*([0-9]+[,\.][0-9]{2})/i,
-    /somme[:\s]*([0-9]+[,\.][0-9]{2})/i,
-    /som van[:\s]*([0-9]+[,\.][0-9]{2})/i,
+  // IMPORTO — pattern ordinati per precisione
+  let importo = 0;
+  const pats = [
+    /DA PAGARE[^\d]*(\d{1,5}[,\.]\d{2})/i,
+    /PAGARE[^\d]*(\d{1,5}[,\.]\d{2})/i,
+    /TOTALE[^\d]*(\d{1,5}[,\.]\d{2})/i,
+    /TOTAL[^\d]*(\d{1,5}[,\.]\d{2})/i,
+    /MONTANT[^\d]*(\d{1,5}[,\.]\d{2})/i,
+    /BEDRAG[^\d]*(\d{1,5}[,\.]\d{2})/i,
+    /SOMME[^\d]*(\d{1,5}[,\.]\d{2})/i,
+    /IMPORTO[^\d]*(\d{1,5}[,\.]\d{2})/i,
+    /AMOUNT[^\d]*(\d{1,5}[,\.]\d{2})/i,
+    /€\s*(\d{1,5}[,\.]\d{2})/,
+    /(\d{1,5}[,\.]\d{2})\s*€/,
+    /EUR\s*(\d{1,5}[,\.]\d{2})/i,
+    /(\d{1,5}[,\.]\d{2})\s*EUR/i,
+    /E\s+(\d{1,5}[,\.]\d{2})\b/,  // "E 20,00" (€ letto come E da OCR)
   ];
-  for (const p of patsTot) {
+  for (const p of pats) {
     const m = T.match(p);
     if (m) { importo = parseFloat(m[1].replace(',','.')); break; }
   }
-
-  // 2. Cerca € + numero o numero + €
+  // Fallback: numero più alto con decimali
   if (!importo) {
-    const patsEur = [
-      /€\s*([0-9]+[,\.][0-9]{2})/,
-      /([0-9]+[,\.][0-9]{2})\s*€/,
-      /EUR\s*([0-9]+[,\.][0-9]{2})/i,
-      /([0-9]+[,\.][0-9]{2})\s*EUR/i,
-    ];
-    for (const p of patsEur) {
-      const m = T.match(p);
-      if (m) { importo = parseFloat(m[1].replace(',','.')); break; }
-    }
-  }
-
-  // 3. Fallback: prendi il numero decimale più alto nella pagina
-  if (!importo) {
-    const tutti = [...T.matchAll(/([0-9]{1,5}[,\.][0-9]{2})/g)]
+    const tutti = [...T.matchAll(/(\d{1,5}[,\.]\d{2})/g)]
       .map(m => parseFloat(m[1].replace(',','.')))
-      .filter(n => n > 0.5 && n < 9999);
+      .filter(n => n >= 0.5 && n < 9999);
     if (tutti.length) importo = Math.max(...tutti);
   }
-
   importo = parseFloat((importo||0).toFixed(2));
 
-  // ── DATA ────────────────────────────────────────────────────────
+  // DATA
   let data = '';
-  // Formati: gg/mm/aaaa, gg-mm-aaaa, gg.mm.aaaa, aaaa-mm-gg
   const dmY = T.match(/(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{4})/);
-  const Ymd = T.match(/(\d{4})[\/\-\.](\d{2})[\/\-\.](\d{2})/);
   const dmyy = T.match(/(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{2})(?!\d)/);
+  const Ymd = T.match(/(\d{4})[\/\-\.](\d{2})[\/\-\.](\d{2})/);
   if (dmY) {
     const [,d,m,y] = dmY;
     if (parseInt(m)<=12 && parseInt(d)<=31)
@@ -551,72 +567,61 @@ function parseOcr(testo, nome) {
       data = `20${yy}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`;
   }
 
-  // ── FORNITORE ───────────────────────────────────────────────────
+  // FORNITORE
   const righe = T.split('\n').map(r=>r.trim())
     .filter(r => r.length > 3 && /[a-zA-Z]/.test(r));
-  const fornitore = (righe[0]||'').substring(0, 60);
+  const fornitore = (righe[0]||'').substring(0,60);
 
-  // ── CATEGORIA ──────────────────────────────────────────────────
-  const combined = (T + ' ' + nome).toLowerCase();
-  const score = {};
-
-  // Parole chiave con pesi
+  // CATEGORIA — keyword con pesi
+  const combined = (T+' '+nome).toLowerCase();
   const KW = [
-    // TAXI — peso alto, include termini francesi/fiamminghi
     ['taxi',5,'TAXI'],['taxis',5,'TAXI'],['taxirit',5,'TAXI'],
-    ['autolux',5,'TAXI'],['course en taxi',5,'TAXI'],['vtc',3,'TAXI'],
-    ['chauffeur',2,'TAXI'],['ncc',2,'TAXI'],['uber',4,'TAXI'],['bolt',3,'TAXI'],
-    // ALBERGO
+    ['autolux',5,'TAXI'],['course en taxi',5,'TAXI'],
+    ['vtc',3,'TAXI'],['uber',4,'TAXI'],['bolt',3,'TAXI'],
     ['hotel',5,'ALBERGO'],['albergo',5,'ALBERGO'],['hilton',5,'ALBERGO'],
     ['marriott',5,'ALBERGO'],['novotel',5,'ALBERGO'],['ibis',4,'ALBERGO'],
-    ['mercure',4,'ALBERGO'],['sofitel',4,'ALBERGO'],['kyriad',4,'ALBERGO'],
-    ['campanile',4,'ALBERGO'],['nuit',3,'ALBERGO'],['chambre',3,'ALBERGO'],
-    ['hébergement',3,'ALBERGO'],
-    // VITTO
-    ['restaurant',4,'VITTO'],['ristorante',4,'VITTO'],['brasserie',4,'VITTO'],
-    ['bistrot',4,'VITTO'],['cafe',3,'VITTO'],['caffè',3,'VITTO'],
-    ['trattoria',4,'VITTO'],['pizzeria',4,'VITTO'],['autogrill',4,'VITTO'],
-    ['pranzo',3,'VITTO'],['cena',3,'VITTO'],['colazione',3,'VITTO'],
-    ['repas',3,'VITTO'],['déjeuner',3,'VITTO'],['diner',3,'VITTO'],
-    // TITOLI VIAGGIO
+    ['mercure',4,'ALBERGO'],['sofitel',4,'ALBERGO'],['chambre',3,'ALBERGO'],
+    ['nuit',3,'ALBERGO'],['hébergement',3,'ALBERGO'],
+    ['ristorante',4,'VITTO'],['restaurant',4,'VITTO'],['brasserie',4,'VITTO'],
+    ['bistrot',4,'VITTO'],['trattoria',4,'VITTO'],['pizzeria',4,'VITTO'],
+    ['autogrill',4,'VITTO'],['pranzo',3,'VITTO'],['cena',3,'VITTO'],
+    ['colazione',3,'VITTO'],['repas',3,'VITTO'],['déjeuner',3,'VITTO'],
     ['ryanair',5,'TITOLI_VIAGGIO'],['easyjet',5,'TITOLI_VIAGGIO'],
-    ['trenitalia',5,'TITOLI_VIAGGIO'],['italo',4,'TITOLI_VIAGGIO'],
-    ['air france',5,'TITOLI_VIAGGIO'],['airfrance',5,'TITOLI_VIAGGIO'],
-    ['sncf',5,'TITOLI_VIAGGIO'],['boarding',4,'TITOLI_VIAGGIO'],
-    ['biglietto',3,'TITOLI_VIAGGIO'],['treno',3,'TITOLI_VIAGGIO'],
-    ['billet',3,'TITOLI_VIAGGIO'],['ticket',2,'TITOLI_VIAGGIO'],
-    // AUTO NOLO
+    ['trenitalia',5,'TITOLI_VIAGGIO'],['air france',5,'TITOLI_VIAGGIO'],
+    ['airfrance',5,'TITOLI_VIAGGIO'],['sncf',5,'TITOLI_VIAGGIO'],
+    ['boarding',4,'TITOLI_VIAGGIO'],['biglietto',3,'TITOLI_VIAGGIO'],
+    ['billet',3,'TITOLI_VIAGGIO'],['volo',3,'TITOLI_VIAGGIO'],
     ['hertz',5,'AUTO_NOLO'],['avis',5,'AUTO_NOLO'],['europcar',5,'AUTO_NOLO'],
     ['sixt',5,'AUTO_NOLO'],['maggiore',4,'AUTO_NOLO'],
-    ['location voiture',4,'AUTO_NOLO'],['noleggio',4,'AUTO_NOLO'],
-    // PARCHEGGI
-    ['parcheggio',5,'PARCHEGGI'],['parking',5,'PARCHEGGI'],['sosta',3,'PARCHEGGI'],
-    // PEDAGGIO
-    ['telepass',5,'PEDAGGIO'],['autostrade',5,'PEDAGGIO'],['casello',5,'PEDAGGIO'],
-    ['péage',5,'PEDAGGIO'],['peage',5,'PEDAGGIO'],['viacard',4,'PEDAGGIO'],
-    ['autoroute',3,'PEDAGGIO'],
+    // PARCHEGGI — include varianti OCR
+    ['parcheggio',5,'PARCHEGGI'],['parking',5,'PARCHEGGI'],
+    ['parcheggi',5,'PARCHEGGI'],['leonardo parking',5,'PARCHEGGI'],
+    ['fiumicino',3,'PARCHEGGI'],['park',2,'PARCHEGGI'],
+    ['sosta',3,'PARCHEGGI'],['garage',3,'PARCHEGGI'],
+    ['telepass',5,'PEDAGGIO'],['autostrade',5,'PEDAGGIO'],
+    ['casello',5,'PEDAGGIO'],['pedaggio',5,'PEDAGGIO'],
+    ['péage',5,'PEDAGGIO'],['peage',5,'PEDAGGIO'],
   ];
-
-  for (const [kw, peso, cat] of KW) {
-    if (combined.includes(kw)) score[cat] = (score[cat]||0) + peso;
+  const score = {};
+  for (const [kw,peso,cat] of KW) {
+    if (combined.includes(kw)) score[cat] = (score[cat]||0)+peso;
   }
-
   let cat = 'VITTO', best = 0;
-  for (const [c,s] of Object.entries(score)) { if (s > best) { best=s; cat=c; } }
+  for (const [c,v] of Object.entries(score)) { if (v>best){best=v;cat=c;} }
 
   return { importo, data, fornitore, cat };
 }
 
 function precompilaDt(iso) {
-  const vp = document.getElementById('v-part');
-  const vr = document.getElementById('v-rient');
-  if (vp && !vp.value) vp.value = iso + 'T06:00';
-  else if (vr && !vr.value) vr.value = iso + 'T23:59';
+  const vp=document.getElementById('v-part');
+  const vr=document.getElementById('v-rient');
+  if (vp && !vp.value) vp.value = iso+'T06:00';
+  else if (vr && !vr.value) vr.value = iso+'T23:59';
 }
 
 function setSts(id, tipo, msg) {
   const el = document.getElementById('sts-'+id); if (!el) return;
-  el.className = 'badge ' + (tipo==='ok'?'b-ok':tipo==='proc'?'b-proc':'b-warn');
+  el.className = 'badge '+(tipo==='ok'?'b-ok':tipo==='proc'?'b-proc':'b-warn');
   el.textContent = msg;
 }
 
@@ -628,14 +633,9 @@ function renderLista() {
     const thumb = isImg && sc.dataUrl
       ? `<img class="sc-thumb" src="${sc.dataUrl}" alt="">`
       : `<div class="sc-thumb">📄</div>`;
-    const catOpts = Object.entries(CATS).map(([k,v])=>
-      `<option value="${k}"${sc.cat===k?' selected':''}>${v.ico} ${v.lbl}</option>`).join('');
-
-    // Card allegato puro (senza OCR)
-    if (sc.soloAllegato) {
-      return `<div class="sc-card allegato-puro" id="scc-${sc.id}">
-        <div class="sc-head">
-          ${thumb}
+    if (sc.soloAllegato) return `
+      <div class="sc-card allegato-puro" id="scc-${sc.id}">
+        <div class="sc-head">${thumb}
           <div class="sc-info">
             <div class="sc-nome">${esc(sc.nome)}</div>
             <span class="badge b-all">📎 Allegato senza OCR</span>
@@ -643,82 +643,71 @@ function renderLista() {
           <button class="del-btn" onclick="elimSc('${sc.id}')">✕</button>
         </div>
       </div>`;
-    }
-
-    // Card con OCR
-    return `<div class="sc-card" id="scc-${sc.id}">
-      <div class="sc-head">
-        ${thumb}
-        <div class="sc-info">
-          <div class="sc-nome">${esc(sc.nome)}</div>
-          <span class="badge ${sc.ocrDone?'b-ok':'b-proc'}" id="sts-${sc.id}">
-            ${sc.ocrDone?'✓ OCR completato':'⏳ OCR in corso...'}
-          </span>
+    const catOpts = Object.entries(CATS).map(([k,v])=>
+      `<option value="${k}"${sc.cat===k?' selected':''}>${v.ico} ${v.lbl}</option>`).join('');
+    return `
+      <div class="sc-card" id="scc-${sc.id}">
+        <div class="sc-head">${thumb}
+          <div class="sc-info">
+            <div class="sc-nome">${esc(sc.nome)}</div>
+            <span class="badge ${sc.ocrDone?'b-ok':'b-proc'}" id="sts-${sc.id}">
+              ${sc.ocrDone?`✓ €${sc.importo.toFixed(2)} · ${CATS[sc.cat]?.lbl||sc.cat}`:'⏳ OCR in corso...'}
+            </span>
+          </div>
+          <button class="del-btn" onclick="elimSc('${sc.id}')">✕</button>
         </div>
-        <button class="del-btn" onclick="elimSc('${sc.id}')">✕</button>
-      </div>
-      ${sc.ocrDone ? `
-      <div class="sc-body">
-        <div class="frow">
-          <label class="fl">Categoria
-            <select onchange="updSc('${sc.id}','cat',this.value)">${catOpts}</select>
-          </label>
-          <label class="fl">Importo €
-            <input type="number" step="0.01" min="0"
-              value="${sc.importo||''}" placeholder="0.00"
-              oninput="updSc('${sc.id}','importo',parseFloat(this.value)||0)">
-          </label>
-        </div>
-        <div class="frow">
-          <label class="fl">Data
-            <input type="date" value="${sc.data||''}"
-              onchange="updSc('${sc.id}','data',this.value)">
-          </label>
-          <label class="fl">Fornitore
-            <input type="text" value="${esc(sc.fornitore||'')}"
-              oninput="updSc('${sc.id}','fornitore',this.value)">
-          </label>
-        </div>
-        ${sc.ocrTesto ? `
-        <div style="margin-top:8px">
-          <button onclick="togRaw('${sc.id}')"
-            style="font-size:11px;color:var(--g5);background:none;border:none;cursor:pointer;padding:0">
-            ▸ Mostra testo OCR grezzo
-          </button>
-          <div id="raw-${sc.id}" class="ocr-raw">${esc(sc.ocrTesto)}</div>
-        </div>` : ''}
-      </div>` : ''}
-    </div>`;
+        ${sc.ocrDone?`
+        <div class="sc-body">
+          <div class="frow">
+            <label class="fl">Categoria
+              <select onchange="updSc('${sc.id}','cat',this.value)">${catOpts}</select>
+            </label>
+            <label class="fl">Importo €
+              <input type="number" step="0.01" min="0" value="${sc.importo||''}"
+                placeholder="0.00" oninput="updSc('${sc.id}','importo',parseFloat(this.value)||0)">
+            </label>
+          </div>
+          <div class="frow">
+            <label class="fl">Data
+              <input type="date" value="${sc.data||''}"
+                onchange="updSc('${sc.id}','data',this.value)">
+            </label>
+            <label class="fl">Fornitore
+              <input type="text" value="${esc(sc.fornitore||'')}"
+                oninput="updSc('${sc.id}','fornitore',this.value)">
+            </label>
+          </div>
+          ${sc.ocrTesto?`
+          <div style="margin-top:8px">
+            <button onclick="togRaw('${sc.id}')"
+              style="font-size:11px;color:var(--g5);background:none;border:none;cursor:pointer;padding:0">
+              ▸ Mostra testo OCR grezzo
+            </button>
+            <div id="raw-${sc.id}" class="ocr-raw">${esc(sc.ocrTesto.substring(0,500))}</div>
+          </div>`:''}
+        </div>`:''}
+      </div>`;
   }).join('');
   aggiornaCnt();
 }
 
 function togRaw(id) {
-  const el = document.getElementById('raw-'+id);
-  if (!el) return;
-  el.style.display = el.style.display==='none'||!el.style.display ? 'block' : 'none';
+  const el = document.getElementById('raw-'+id); if (!el) return;
+  el.style.display = el.style.display==='block'?'none':'block';
 }
-
 function aggiornaCnt() {
   const cnt = document.getElementById('sc-count');
   const n = S.scontrini.length;
-  cnt.style.display = n > 0 ? 'block' : 'none';
+  cnt.style.display = n>0?'block':'none';
   const ocr = S.scontrini.filter(s=>!s.soloAllegato).length;
   const all = S.scontrini.filter(s=>s.soloAllegato).length;
-  cnt.textContent = `${n} file caricati · ${ocr} con OCR · ${all} allegati puri`;
+  cnt.textContent = `${n} file · ${ocr} con OCR · ${all} allegati puri`;
 }
-
-function updSc(id, k, v) {
-  const s = S.scontrini.find(x=>x.id===id);
-  if (s) { s[k]=v; aggTot(); }
-}
-function elimSc(id) {
-  S.scontrini = S.scontrini.filter(s=>s.id!==id);
-  renderLista(); aggBtn3(); aggTot();
-}
+function updSc(id,k,v){ const s=S.scontrini.find(x=>x.id===id); if(s){s[k]=v;aggTot();} }
+function elimSc(id){ S.scontrini=S.scontrini.filter(s=>s.id!==id); renderLista(); aggBtn3(); aggTot(); }
 function aggBtn3() {
-  const pronto = S.scontrini.some(s=>s.ocrDone||s.soloAllegato);
-  document.getElementById('btn-s3').style.display = pronto?'block':'none';
+  document.getElementById('btn-s3').style.display =
+    S.scontrini.some(s=>s.ocrDone||s.soloAllegato)?'block':'none';
 }
 
 // ═══════════════════════════════════
@@ -727,52 +716,44 @@ function aggBtn3() {
 function prepVerifica() {
   document.getElementById('sub3').textContent =
     `Nr. ${S.dati.nr} · ${S.scontrini.length} scontrini`;
-  aggTot();
-  showScreen('s3');
+  aggTot(); showScreen('s3');
 }
-
 function calTot() {
-  const r = {};
-  for (const k of Object.keys(CATS)) r[k] = 0;
-  for (const sc of S.scontrini) {
-    if (!sc.soloAllegato && sc.cat in r && sc.importo > 0)
-      r[sc.cat] = parseFloat((r[sc.cat]+sc.importo).toFixed(2));
-  }
+  const r={};
+  for (const k of Object.keys(CATS)) r[k]=0;
+  for (const sc of S.scontrini)
+    if (!sc.soloAllegato && sc.cat in r && sc.importo>0)
+      r[sc.cat]=parseFloat((r[sc.cat]+sc.importo).toFixed(2));
   return r;
 }
-
 function aggTot() {
-  const tot = calTot();
-  const km = parseFloat(document.getElementById('v-km')?.value||102)||102;
-  const tar = parseFloat(document.getElementById('v-tar')?.value||0.3228)||0.3228;
-  const totKm = parseFloat((km*tar).toFixed(2));
-  const kr = document.getElementById('km-ris');
-  if (kr) kr.textContent = `Rimborso: € ${totKm.toFixed(2)}`;
-
-  const vb = document.getElementById('voci-body');
-  if (vb) vb.innerHTML = Object.entries(CATS).map(([k,v]) => {
-    const val = tot[k]||0;
-    const sps = S.scontrini.filter(s=>!s.soloAllegato&&s.cat===k&&s.importo>0);
-    return `<div class="trow${val===0?' zero':''}">
-      <div>
-        <div>${v.ico} ${v.lbl}</div>
-        ${sps.length ? `<div style="font-size:11px;color:var(--g5);margin-top:2px">
-          ${sps.map(s=>`${(s.fornitore||s.nome).substring(0,22)} €${s.importo.toFixed(2)}`).join(' · ')}
-        </div>` : ''}
+  const tot=calTot();
+  const km=parseFloat(document.getElementById('v-km')?.value||102)||102;
+  const tar=parseFloat(document.getElementById('v-tar')?.value||0.3228)||0.3228;
+  const totKm=parseFloat((km*tar).toFixed(2));
+  const kr=document.getElementById('km-ris');
+  if(kr)kr.textContent=`Rimborso: € ${totKm.toFixed(2)}`;
+  const vb=document.getElementById('voci-body');
+  if(vb)vb.innerHTML=Object.entries(CATS).map(([k,v])=>{
+    const val=tot[k]||0;
+    const sps=S.scontrini.filter(s=>!s.soloAllegato&&s.cat===k&&s.importo>0);
+    return`<div class="trow${val===0?' zero':''}">
+      <div><div>${v.ico} ${v.lbl}</div>
+      ${sps.length?`<div style="font-size:11px;color:var(--g5);margin-top:2px">
+        ${sps.map(s=>`${(s.fornitore||s.nome).substring(0,22)} €${s.importo.toFixed(2)}`).join(' · ')}
+      </div>`:''}
       </div>
       <div style="font-weight:600;white-space:nowrap">${val>0?'€ '+val.toFixed(2):'—'}</div>
     </div>`;
   }).join('');
-
-  const totGen = parseFloat((Object.values(tot).reduce((a,b)=>a+b,0)+totKm).toFixed(2));
-  const tp = document.getElementById('tot-prev');
-  if (tp) tp.innerHTML = Object.entries(CATS).map(([k,v]) => {
-    const val = tot[k]||0;
-    return `<div class="trow${val===0?' zero':''}">
-      <span>${v.ico} ${v.lbl}</span>
-      <span>${val>0?'€ '+val.toFixed(2):'—'}</span>
+  const totGen=parseFloat((Object.values(tot).reduce((a,b)=>a+b,0)+totKm).toFixed(2));
+  const tp=document.getElementById('tot-prev');
+  if(tp)tp.innerHTML=Object.entries(CATS).map(([k,v])=>{
+    const val=tot[k]||0;
+    return`<div class="trow${val===0?' zero':''}">
+      <span>${v.ico} ${v.lbl}</span><span>${val>0?'€ '+val.toFixed(2):'—'}</span>
     </div>`;
-  }).join('') +
+  }).join('')+
   `<div class="trow${totKm===0?' zero':''}">
     <span>🚗 Rimborso km (${km} km)</span>
     <span>${totKm>0?'€ '+totKm.toFixed(2):'—'}</span>
@@ -784,149 +765,116 @@ function aggTot() {
 // S4 — GENERA PDF
 // ═══════════════════════════════════
 async function generaPdf() {
-  document.getElementById('sub4').textContent =
-    `Nr. ${S.dati.nr} · ${S.scontrini.length} allegati`;
-  document.getElementById('pdf-spin').style.display = 'flex';
-  document.getElementById('pdf-act').style.display = 'none';
-  document.getElementById('pdf-ico').textContent = '⏳';
-  document.getElementById('pdf-tit').textContent = 'Generazione...';
-  document.getElementById('pdf-sub').textContent = 'Compilazione Nota Spese e allegati...';
-  document.getElementById('card-fin').style.display = 'none';
-
+  document.getElementById('sub4').textContent=`Nr. ${S.dati.nr} · ${S.scontrini.length} allegati`;
+  document.getElementById('pdf-spin').style.display='flex';
+  document.getElementById('pdf-act').style.display='none';
+  document.getElementById('pdf-ico').textContent='⏳';
+  document.getElementById('pdf-tit').textContent='Generazione...';
+  document.getElementById('pdf-sub').textContent='Compilazione Nota Spese e allegati...';
+  document.getElementById('card-fin').style.display='none';
   try {
-    const { PDFDocument, rgb, StandardFonts } = PDFLib;
-    const doc = await PDFDocument.load(S.pdfBytes);
-    const pg = doc.getPages()[0];
-    const font = await doc.embedFont(StandardFonts.Helvetica);
-    const fontB = await doc.embedFont(StandardFonts.HelveticaBold);
-    const nero = rgb(0,0,0);
-    const sz = 8;
-
-    const fmtDt = iso => {
-      if (!iso) return '';
-      const d = new Date(iso);
-      return d.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'2-digit'}) +
-             ' ' + d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+    const{PDFDocument,rgb,StandardFonts}=PDFLib;
+    const doc=await PDFDocument.load(S.pdfBytes);
+    const pg=doc.getPages()[0];
+    const font=await doc.embedFont(StandardFonts.Helvetica);
+    const fontB=await doc.embedFont(StandardFonts.HelveticaBold);
+    const nero=rgb(0,0,0);const sz=8;
+    const fmtDt=iso=>{
+      if(!iso)return'';
+      const d=new Date(iso);
+      return d.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'2-digit'})+
+             ' '+d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
     };
-
-    // Date effettive
-    const vp = document.getElementById('v-part').value;
-    const vr = document.getElementById('v-rient').value;
-    if (vp) pg.drawText(fmtDt(vp), {x:C.partX, y:C.partY, font, size:sz, color:nero});
-    if (vr) pg.drawText(fmtDt(vr), {x:C.rienX, y:C.rienY, font, size:sz, color:nero});
-
-    // Checkbox pernottamento
-    if (document.getElementById('v-pern').checked)
-      pg.drawText('X', {x:C.pernX, y:C.pernY, font:fontB, size:9, color:nero});
-
-    // Importi per categoria
-    const tot = calTot();
-    const wI = (val, y) => {
-      if (val > 0) pg.drawText(val.toFixed(2), {x:C.impX, y, font, size:sz, color:nero});
-    };
-    wI(tot.ALBERGO,        C.albY);
-    wI(tot.VITTO,          C.vitY);
-    wI(tot.TITOLI_VIAGGIO, C.titY);
-    wI(tot.TAXI,           C.taxY);
-    wI(tot.AUTO_NOLO,      C.nolY);
-    wI(tot.PARCHEGGI,      C.parY);
-    wI(tot.PEDAGGIO,       C.pedY);
-
-    // KM — solo il numero, NON l'importo
-    const km = parseFloat(document.getElementById('v-km').value)||102;
-    pg.drawText(km.toString(), {x:C.kmX, y:C.kmY, font, size:sz, color:nero});
-
-    // Note
-    const note = document.getElementById('v-note').value||'';
-    if (note) pg.drawText(note.substring(0,120), {x:C.notX, y:C.notY, font, size:sz, color:nero});
-
-    // Allegati
-    for (const sc of S.scontrini) {
-      if (sc.tipo === 'application/pdf') {
-        try {
-          const ab = await sc.file.arrayBuffer();
-          const sd = await PDFDocument.load(ab, {ignoreEncryption:true});
-          const cps = await doc.copyPages(sd, sd.getPageIndices());
-          cps.forEach(p => doc.addPage(p));
-        } catch { pagFallback(doc, sc, font, rgb); }
-      } else if (sc.dataUrl) {
-        try {
-          const bytes = b64bytes(sc.dataUrl.split(',')[1]);
-          const img = sc.tipo==='image/png'
-            ? await doc.embedPng(bytes) : await doc.embedJpg(bytes);
-          const np = doc.addPage();
-          const {width,height} = np.getSize();
-          const d = img.scaleToFit(width-40, height-70);
-          np.drawText(`Allegato: ${sc.nome}`,
-            {x:20, y:height-28, font, size:10, color:rgb(.3,.3,.3)});
-          const etichetta = sc.soloAllegato
-            ? 'Allegato aggiuntivo'
-            : `${CATS[sc.cat]?.lbl||sc.cat} · € ${sc.importo.toFixed(2)}`;
-          np.drawText(etichetta, {x:20, y:height-44, font, size:9, color:rgb(.4,.4,.4)});
-          np.drawImage(img, {x:(width-d.width)/2, y:20, width:d.width, height:d.height});
-        } catch { pagFallback(doc, sc, font, rgb); }
+    const vp=document.getElementById('v-part').value;
+    const vr=document.getElementById('v-rient').value;
+    if(vp)pg.drawText(fmtDt(vp),{x:C.partX,y:C.partY,font,size:sz,color:nero});
+    if(vr)pg.drawText(fmtDt(vr),{x:C.rienX,y:C.rienY,font,size:sz,color:nero});
+    if(document.getElementById('v-pern').checked)
+      pg.drawText('X',{x:C.pernX,y:C.pernY,font:fontB,size:9,color:nero});
+    const tot=calTot();
+    const wI=(val,y)=>{if(val>0)pg.drawText(val.toFixed(2),{x:C.impX,y,font,size:sz,color:nero});};
+    wI(tot.ALBERGO,C.albY);wI(tot.VITTO,C.vitY);wI(tot.TITOLI_VIAGGIO,C.titY);
+    wI(tot.TAXI,C.taxY);wI(tot.AUTO_NOLO,C.nolY);wI(tot.PARCHEGGI,C.parY);wI(tot.PEDAGGIO,C.pedY);
+    const km=parseFloat(document.getElementById('v-km').value)||102;
+    pg.drawText(km.toString(),{x:C.kmX,y:C.kmY,font,size:sz,color:nero});
+    const note=document.getElementById('v-note').value||'';
+    if(note)pg.drawText(note.substring(0,120),{x:C.notX,y:C.notY,font,size:sz,color:nero});
+    for(const sc of S.scontrini){
+      if(sc.tipo==='application/pdf'){
+        try{
+          const ab=await sc.file.arrayBuffer();
+          const sd=await PDFDocument.load(ab,{ignoreEncryption:true});
+          const cps=await doc.copyPages(sd,sd.getPageIndices());
+          cps.forEach(p=>doc.addPage(p));
+        }catch{pagFallback(doc,sc,font,rgb);}
+      }else if(sc.dataUrl){
+        try{
+          const bytes=b64bytes(sc.dataUrl.split(',')[1]);
+          const img=sc.tipo==='image/png'?await doc.embedPng(bytes):await doc.embedJpg(bytes);
+          const np=doc.addPage();
+          const{width,height}=np.getSize();
+          const d=img.scaleToFit(width-40,height-70);
+          np.drawText(`Allegato: ${sc.nome}`,{x:20,y:height-28,font,size:10,color:rgb(.3,.3,.3)});
+          const etichetta=sc.soloAllegato?'Allegato aggiuntivo'
+            :`${CATS[sc.cat]?.lbl||sc.cat} · € ${sc.importo.toFixed(2)}`;
+          np.drawText(etichetta,{x:20,y:height-44,font,size:9,color:rgb(.4,.4,.4)});
+          np.drawImage(img,{x:(width-d.width)/2,y:20,width:d.width,height:d.height});
+        }catch{pagFallback(doc,sc,font,rgb);}
       }
     }
-
-    S.pdfOut = await doc.save();
-    document.getElementById('pdf-spin').style.display = 'none';
-    document.getElementById('pdf-act').style.display = 'block';
-    document.getElementById('pdf-ico').textContent = '✅';
-    document.getElementById('pdf-tit').textContent = 'PDF pronto!';
-    const ns = S.scontrini.length;
-    document.getElementById('pdf-sub').textContent =
+    S.pdfOut=await doc.save();
+    document.getElementById('pdf-spin').style.display='none';
+    document.getElementById('pdf-act').style.display='block';
+    document.getElementById('pdf-ico').textContent='✅';
+    document.getElementById('pdf-tit').textContent='PDF pronto!';
+    const ns=S.scontrini.length;
+    document.getElementById('pdf-sub').textContent=
       `Modulo B compilato · ${ns} allegato${ns!==1?'i':''} incluso${ns!==1?'i':''}`;
     renderFin();
-
-  } catch(err) {
-    document.getElementById('pdf-spin').style.display = 'none';
+  }catch(err){
+    document.getElementById('pdf-spin').style.display='none';
     showAlert('alert-pdf','err','Errore: '+err.message);
     console.error(err);
   }
 }
 
-function pagFallback(doc, sc, font, rgb) {
-  const p = doc.addPage(); const h = p.getHeight();
-  p.drawText('Allegato: '+sc.nome, {x:40,y:h-60,font,size:11,color:rgb(0,0,0)});
-  if (!sc.soloAllegato)
-    p.drawText('Categoria: '+(CATS[sc.cat]?.lbl||sc.cat)+' · Importo: €'+sc.importo.toFixed(2),
+function pagFallback(doc,sc,font,rgb){
+  const p=doc.addPage();const h=p.getHeight();
+  p.drawText('Allegato: '+sc.nome,{x:40,y:h-60,font,size:11,color:rgb(0,0,0)});
+  if(!sc.soloAllegato)
+    p.drawText(`${CATS[sc.cat]?.lbl||sc.cat} · € ${sc.importo.toFixed(2)}`,
       {x:40,y:h-78,font,size:10,color:rgb(.3,.3,.3)});
 }
-
-function renderFin() {
-  const tot = calTot();
-  const km = parseFloat(document.getElementById('v-km').value)||102;
-  const tar = parseFloat(document.getElementById('v-tar').value)||0.3228;
-  const totKm = parseFloat((km*tar).toFixed(2));
-  const totGen = parseFloat((Object.values(tot).reduce((a,b)=>a+b,0)+totKm).toFixed(2));
-  const rows = Object.entries(CATS)
-    .filter(([k])=>(tot[k]||0)>0)
-    .map(([k,v])=>`<div class="trow"><span>${v.ico} ${v.lbl}</span>
-      <span>€ ${tot[k].toFixed(2)}</span></div>`).join('');
-  document.getElementById('card-fin').style.display = 'block';
-  document.getElementById('rie-fin').innerHTML = rows +
-    (totKm>0 ? `<div class="trow"><span>🚗 Rimborso km (${km})</span>
-      <span>€ ${totKm.toFixed(2)}</span></div>` : '') +
+function renderFin(){
+  const tot=calTot();
+  const km=parseFloat(document.getElementById('v-km').value)||102;
+  const tar=parseFloat(document.getElementById('v-tar').value)||0.3228;
+  const totKm=parseFloat((km*tar).toFixed(2));
+  const totGen=parseFloat((Object.values(tot).reduce((a,b)=>a+b,0)+totKm).toFixed(2));
+  document.getElementById('card-fin').style.display='block';
+  document.getElementById('rie-fin').innerHTML=
+    Object.entries(CATS).filter(([k])=>(tot[k]||0)>0)
+      .map(([k,v])=>`<div class="trow"><span>${v.ico} ${v.lbl}</span><span>€ ${tot[k].toFixed(2)}</span></div>`)
+      .join('')+
+    (totKm>0?`<div class="trow"><span>🚗 Rimborso km (${km})</span><span>€ ${totKm.toFixed(2)}</span></div>`:'')+
     `<div class="trow TOT"><span>TOTALE</span><span>€ ${totGen.toFixed(2)}</span></div>
      <div style="font-size:12px;color:var(--g5);text-align:right;margin-top:8px">
-       ${S.scontrini.length} allegati · 
-       ${S.scontrini.filter(s=>s.soloAllegato).length} senza OCR
+       ${S.scontrini.length} allegati · ${S.scontrini.filter(s=>s.soloAllegato).length} senza OCR
      </div>`;
 }
-
-function scarica() {
-  if (!S.pdfOut) return;
-  const url = URL.createObjectURL(new Blob([S.pdfOut],{type:'application/pdf'}));
-  const a = document.createElement('a');
-  a.href=url; a.download=`nota_spese_${S.dati.nr||'ENAV'}.pdf`; a.click();
+function scarica(){
+  if(!S.pdfOut)return;
+  const url=URL.createObjectURL(new Blob([S.pdfOut],{type:'application/pdf'}));
+  const a=document.createElement('a');a.href=url;
+  a.download=`nota_spese_${S.dati.nr||'ENAV'}.pdf`;a.click();
   URL.revokeObjectURL(url);
 }
-function apriStampa() {
-  if (!S.pdfOut) return;
+function apriStampa(){
+  if(!S.pdfOut)return;
   window.open(URL.createObjectURL(new Blob([S.pdfOut],{type:'application/pdf'})),'_blank');
 }
-function ricomincia() {
-  S.pdfBytes=null; S.dati={}; S.scontrini=[]; S.pdfOut=null;
+function ricomincia(){
+  S.pdfBytes=null;S.dati={};S.scontrini=[];S.pdfOut=null;
   document.getElementById('inp-mod').value='';
   document.getElementById('mod-prev').style.display='none';
   document.getElementById('btn-s2').style.display='none';
@@ -939,28 +887,22 @@ function ricomincia() {
 // ═══════════════════════════════════
 // UTILITY
 // ═══════════════════════════════════
-function toDataUrl(f) {
-  return new Promise(res => {
-    const r = new FileReader();
-    r.onload = e => res(e.target.result);
-    r.readAsDataURL(f);
-  });
+function toDataUrl(f){
+  return new Promise(res=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.readAsDataURL(f);});
 }
-function b64bytes(b64) {
-  const bin = atob(b64);
-  const b = new Uint8Array(bin.length);
-  for (let i=0; i<bin.length; i++) b[i] = bin.charCodeAt(i);
-  return b;
+function b64bytes(b64){
+  const bin=atob(b64);const b=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++)b[i]=bin.charCodeAt(i);return b;
 }
-function showAlert(id, tipo, msg) {
-  const el = document.getElementById(id); if (!el) return;
-  if (!tipo||!msg) { el.innerHTML=''; return; }
-  const cls = tipo==='err'?'aerr':tipo==='ok'?'aok':'ainfo';
-  el.innerHTML = `<div class="alert ${cls}">${msg}</div>`;
-  if (tipo==='ok') setTimeout(()=>{ if(el) el.innerHTML=''; },3000);
+function showAlert(id,tipo,msg){
+  const el=document.getElementById(id);if(!el)return;
+  if(!tipo||!msg){el.innerHTML='';return;}
+  const cls=tipo==='err'?'aerr':tipo==='ok'?'aok':'ainfo';
+  el.innerHTML=`<div class="alert ${cls}">${msg}</div>`;
+  if(tipo==='ok')setTimeout(()=>{if(el)el.innerHTML='';},3000);
 }
-function esc(s) {
-  return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;')
+function esc(s){
+  return(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;')
     .replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 </script>
