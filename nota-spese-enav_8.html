@@ -14,10 +14,8 @@
   --blu:#1A56A0;--blud:#133f80;--blul:#EFF6FF;--blum:#DBEAFE;
   --g9:#111827;--g7:#374151;--g6:#4B5563;--g5:#6B7280;
   --g3:#D1D5DB;--g2:#E5E7EB;--g1:#F3F4F6;--g0:#F9FAFB;
-  --ver:#059669;--verl:#ECFDF5;
-  --amb:#D97706;--ambl:#FFFBEB;
-  --ros:#DC2626;--rosl:#FEF2F2;
-  --r:10px;
+  --ver:#059669;--verl:#ECFDF5;--amb:#D97706;--ambl:#FFFBEB;
+  --ros:#DC2626;--rosl:#FEF2F2;--r:10px;
 }
 html,body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
   font-size:15px;color:var(--g7);background:var(--g1);min-height:100vh}
@@ -27,28 +25,24 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-se
   align-items:center;gap:10px;position:sticky;top:0;z-index:100;flex-shrink:0}
 .topbar h1{font-size:16px;font-weight:600;flex:1}
 .sub{font-size:11px;opacity:.75;margin-top:1px}
-.back{background:none;border:none;color:#fff;font-size:26px;cursor:pointer;
-  padding:0 8px 0 0;line-height:1;flex-shrink:0}
-.steps{display:flex;align-items:center;padding:10px 14px;background:#fff;
-  border-bottom:1px solid var(--g2);flex-shrink:0}
+.back{background:none;border:none;color:#fff;font-size:26px;cursor:pointer;padding:0 8px 0 0;line-height:1;flex-shrink:0}
+.steps{display:flex;align-items:center;padding:10px 14px;background:#fff;border-bottom:1px solid var(--g2);flex-shrink:0}
 .step{display:flex;flex-direction:column;align-items:center;flex:1;gap:3px}
-.sdot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;
-  justify-content:center;font-size:11px;font-weight:700;border:2px solid var(--g3);
-  color:var(--g5);background:#fff;transition:all .2s}
+.sdot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;border:2px solid var(--g3);color:var(--g5);background:#fff;transition:all .2s}
 .sdot.done{background:var(--ver);border-color:var(--ver);color:#fff}
 .sdot.active{background:var(--blu);border-color:var(--blu);color:#fff}
 .slbl{font-size:10px;color:var(--g5);text-align:center;line-height:1.2}
 .sline{flex:1;height:2px;background:var(--g2);margin:0 4px;margin-bottom:13px}
 .sline.done{background:var(--ver)}
 .content{flex:1;padding:14px;max-width:760px;margin:0 auto;width:100%;padding-bottom:80px}
-.card{background:#fff;border:1px solid var(--g2);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.card{background:#fff;border:1px solid var(--g2);border-radius:var(--r);padding:16px;margin-bottom:12px}
 .card h3{font-size:14px;font-weight:600;color:var(--g9);margin-bottom:12px}
-.btn{display:flex;align-items:center;justify-content:center;gap:6px;
-  padding:13px 18px;border-radius:8px;font-size:15px;font-weight:500;
-  cursor:pointer;border:none;width:100%;margin-top:8px;transition:opacity .15s}
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:13px 18px;
+  border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;border:none;width:100%;
+  margin-top:8px;transition:opacity .15s}
 .btn:disabled{opacity:.4;cursor:not-allowed}
-.blu{background:var(--blu);color:#fff}
-.blu:active:not(:disabled){background:var(--blud)}
+.blu{background:var(--blu);color:#fff}.blu:active:not(:disabled){background:var(--blud)}
 .ver{background:var(--ver);color:#fff}
 .out{background:#fff;color:var(--blu);border:1.5px solid var(--blu)}
 .gri{background:#fff;color:var(--g6);border:1.5px solid var(--g3)}
@@ -57,96 +51,110 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-se
 .uzone:active{border-color:var(--blu)}
 .uzone input{display:none}
 .uzone-all{border-color:var(--amb);background:var(--ambl)}
-.uzone-all:active{border-color:var(--amb)}
-.igrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-@media(max-width:400px){.igrid{grid-template-columns:1fr}}
-.iitem{background:var(--g0);border-radius:8px;padding:9px 12px}
-.ilbl{font-size:11px;color:var(--g5);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
-.ival{font-size:13px;font-weight:600;color:var(--g9)}
-.frow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-@media(max-width:400px){.frow{grid-template-columns:1fr}}
+/* form */
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+@media(max-width:420px){.frow{grid-template-columns:1fr}}
 label.fl{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:500;color:var(--g6)}
-input,select,textarea{width:100%;padding:9px 11px;border:1px solid var(--g3);
-  border-radius:7px;font-size:14px;background:#fff;color:var(--g9);
-  -webkit-appearance:none;appearance:none;font-family:inherit}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blu);
-  box-shadow:0 0 0 3px rgba(26,86,160,.1)}
+input,select,textarea{width:100%;padding:9px 11px;border:1px solid var(--g3);border-radius:7px;
+  font-size:14px;background:#fff;color:var(--g9);-webkit-appearance:none;appearance:none;font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blu);box-shadow:0 0 0 3px rgba(26,86,160,.1)}
 textarea{resize:vertical;min-height:60px}
-.sc-card{background:#fff;border:1px solid var(--g2);border-radius:var(--r);
-  margin-bottom:8px;overflow:hidden}
+input[readonly]{background:var(--g0);color:var(--g5)}
+/* scontrino */
+.sc-card{background:#fff;border:1px solid var(--g2);border-radius:var(--r);margin-bottom:8px;overflow:hidden}
 .sc-card.allegato-puro{border-left:3px solid var(--amb)}
 .sc-head{display:flex;align-items:center;gap:10px;padding:11px 13px}
-.sc-thumb{width:52px;height:52px;border-radius:6px;object-fit:cover;
-  border:1px solid var(--g2);flex-shrink:0;background:var(--g1);
-  display:flex;align-items:center;justify-content:center;font-size:22px}
+.sc-thumb{width:52px;height:52px;border-radius:6px;object-fit:cover;border:1px solid var(--g2);
+  flex-shrink:0;background:var(--g1);display:flex;align-items:center;justify-content:center;font-size:22px}
 .sc-info{flex:1;min-width:0}
 .sc-nome{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sc-body{padding:0 13px 12px;border-top:1px solid var(--g1)}
 .del-btn{background:none;border:none;color:var(--ros);cursor:pointer;font-size:20px;padding:6px;flex-shrink:0}
-.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;
-  padding:3px 8px;border-radius:99px;font-weight:500;margin-top:3px}
-.b-ok{background:var(--verl);color:var(--ver)}
-.b-proc{background:var(--blum);color:var(--blu)}
-.b-warn{background:var(--ambl);color:var(--amb)}
-.b-all{background:var(--ambl);color:var(--amb)}
-.trow{display:flex;justify-content:space-between;align-items:center;
-  padding:9px 0;border-bottom:1px solid var(--g1);font-size:14px}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 8px;border-radius:99px;font-weight:500;margin-top:3px}
+.b-ok{background:var(--verl);color:var(--ver)}.b-proc{background:var(--blum);color:var(--blu)}
+.b-warn{background:var(--ambl);color:var(--amb)}.b-all{background:var(--ambl);color:var(--amb)}
+/* totali */
+.trow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--g1);font-size:14px}
 .trow.zero{opacity:.3}
-.trow.TOT{border-top:2px solid var(--g9);border-bottom:none;
-  padding-top:12px;font-weight:700;font-size:16px;color:var(--blu)}
-.chkrow{display:flex;align-items:center;gap:10px;padding:11px;
-  background:var(--g0);border-radius:8px;cursor:pointer;margin-bottom:12px;border:1px solid var(--g2)}
+.trow.TOT{border-top:2px solid var(--g9);border-bottom:none;padding-top:12px;font-weight:700;font-size:16px;color:var(--blu)}
+/* checkbox */
+.chkrow{display:flex;align-items:center;gap:10px;padding:11px;background:var(--g0);
+  border-radius:8px;cursor:pointer;margin-bottom:12px;border:1px solid var(--g2)}
 .chkrow input{width:20px;height:20px;flex-shrink:0;accent-color:var(--blu);cursor:pointer}
 .chkrow label{font-size:13px;cursor:pointer;line-height:1.4}
 .alert{padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px}
-.aerr{background:var(--rosl);color:var(--ros)}
-.aok{background:var(--verl);color:var(--ver)}
+.aerr{background:var(--rosl);color:var(--ros)}.aok{background:var(--verl);color:var(--ver)}
 .ainfo{background:var(--blul);color:var(--blu)}
 .ocr-raw{font-size:10px;color:var(--g5);background:var(--g0);border-radius:6px;
   padding:6px;margin-top:6px;max-height:80px;overflow-y:auto;white-space:pre-wrap;display:none}
 @keyframes spin{to{transform:rotate(360deg)}}
-.spinner{width:16px;height:16px;border:2px solid var(--blum);
-  border-top-color:var(--blu);border-radius:50%;animation:spin .7s linear infinite}
-
-/* Progress OCR */
-.ocr-prog-wrap{background:var(--blul);border-radius:8px;padding:10px 12px;
-  margin-top:8px;font-size:12px;color:var(--blu);display:none}
+.spinner{width:16px;height:16px;border:2px solid var(--blum);border-top-color:var(--blu);
+  border-radius:50%;animation:spin .7s linear infinite}
+.ocr-prog{background:var(--blul);border-radius:8px;padding:10px 12px;margin-top:8px;
+  font-size:12px;color:var(--blu);display:none}
 .ocr-prog-bar{height:3px;background:var(--blum);border-radius:2px;margin-top:6px}
-.ocr-prog-fill{height:3px;background:var(--blu);border-radius:2px;
-  transition:width .3s;width:0%}
+.ocr-prog-fill{height:3px;background:var(--blu);border-radius:2px;transition:width .3s;width:0%}
 </style>
 </head>
 <body>
 
-<!-- ══ S1 ══ -->
+<!-- ══ S1 — MODULO B ══ -->
 <div id="s1" class="screen active">
   <div class="topbar"><h1>Nota Spese ENAV</h1></div>
   <div class="content">
     <div class="card">
-      <h3>📋 Carica il Modulo B</h3>
+      <h3>📋 Passo 1 — Carica il Modulo B</h3>
       <p style="font-size:13px;color:var(--g6);margin-bottom:12px">
-        Carica il PDF ricevuto dalla segretaria. I dati vengono letti automaticamente.
+        Carica il PDF ricevuto dalla segretaria. I campi vengono precompilati automaticamente e puoi modificarli.
       </p>
       <div class="uzone" onclick="document.getElementById('inp-mod').click()">
         <input type="file" id="inp-mod" accept="application/pdf" onchange="caricaModulo(event)">
         <div style="font-size:34px;margin-bottom:6px">📄</div>
-        <div style="font-size:15px;font-weight:600;color:var(--g9);margin-bottom:3px">Tocca per caricare</div>
-        <div style="font-size:13px;color:var(--g5)">File PDF · max 20MB</div>
+        <div style="font-size:15px;font-weight:600;color:var(--g9);margin-bottom:3px">Tocca per caricare il Modulo B</div>
+        <div style="font-size:13px;color:var(--g5)">File PDF</div>
       </div>
-      <div id="mod-prev" style="display:none;margin-top:12px"></div>
+    </div>
+
+    <!-- Campi dati — appaiono dopo il caricamento -->
+    <div id="dati-form" style="display:none">
+      <div class="card">
+        <h3>Dati trasferta</h3>
+        <div class="frow">
+          <label class="fl">Nr. Progressivo
+            <input type="text" id="f-nr" oninput="S.dati.nr=this.value">
+          </label>
+          <label class="fl">Dipendente
+            <input type="text" id="f-dip" readonly>
+          </label>
+        </div>
+        <div class="frow">
+          <label class="fl">Matricola
+            <input type="text" id="f-mat" readonly>
+          </label>
+          <label class="fl">Destinazione
+            <input type="text" id="f-dest" oninput="S.dati.dest=this.value">
+          </label>
+        </div>
+        <div class="frow">
+          <label class="fl">Partenza prevista
+            <input type="datetime-local" id="f-part" oninput="S.dati.partISO=this.value">
+          </label>
+          <label class="fl">Rientro previsto
+            <input type="datetime-local" id="f-rient" oninput="S.dati.rienISO=this.value">
+          </label>
+        </div>
+      </div>
       <div id="alert-mod"></div>
-      <button class="btn blu" id="btn-s2" style="display:none" onclick="vai(2)">
-        Continua → Aggiungi scontrini
-      </button>
+      <button class="btn blu" onclick="vai(2)">Continua → Aggiungi scontrini</button>
     </div>
   </div>
 </div>
 
-<!-- ══ S2 ══ -->
+<!-- ══ S2 — SCONTRINI ══ -->
 <div id="s2" class="screen">
   <div class="topbar">
     <button class="back" onclick="vai(1)">‹</button>
-    <div><h1>Scontrini e ricevute</h1><div class="sub" id="sub2"></div></div>
+    <div><h1>Scontrini</h1><div class="sub" id="sub2"></div></div>
   </div>
   <div class="steps">
     <div class="step"><div class="sdot done">✓</div><div class="slbl">Modulo</div></div>
@@ -159,52 +167,39 @@ textarea{resize:vertical;min-height:60px}
   </div>
   <div class="content">
     <button class="btn gri" style="margin-bottom:12px;margin-top:0" onclick="vai(1)">‹ Torna al Modulo B</button>
-    <div id="alert-sc"></div>
-    <div class="card" id="card-riepilogo"></div>
-
     <div class="card">
       <h3>📸 Scontrini con OCR automatico</h3>
       <p style="font-size:13px;color:var(--g6);margin-bottom:10px">
-        OCR legge importo, data e classifica la categoria in automatico.
-        Funziona offline su tutti i dispositivi.
+        OCR estrae importo, data e categoria automaticamente.
       </p>
       <div class="uzone" onclick="document.getElementById('inp-sc').click()">
-        <input type="file" id="inp-sc" accept="image/*,application/pdf"
-          multiple onchange="aggiungiOcr(event)">
+        <input type="file" id="inp-sc" accept="image/*,application/pdf" multiple onchange="aggiungiOcr(event)">
         <div style="font-size:30px;margin-bottom:5px">📸</div>
         <div style="font-size:14px;font-weight:600;color:var(--g9);margin-bottom:2px">Aggiungi con OCR</div>
         <div style="font-size:12px;color:var(--g5)">Foto / PDF · analisi automatica</div>
       </div>
-      <div id="ocr-global-prog" class="ocr-prog-wrap">
-        <span id="ocr-global-msg">OCR in corso...</span>
-        <div class="ocr-prog-bar"><div class="ocr-prog-fill" id="ocr-global-fill"></div></div>
+      <div id="ocr-prog" class="ocr-prog">
+        <span id="ocr-msg">OCR in corso...</span>
+        <div class="ocr-prog-bar"><div class="ocr-prog-fill" id="ocr-fill"></div></div>
       </div>
     </div>
-
     <div class="card">
-      <h3>📎 Allegati aggiuntivi <span style="font-size:11px;font-weight:400;color:var(--amb)">(senza OCR)</span></h3>
-      <p style="font-size:13px;color:var(--g6);margin-bottom:10px">
-        Foto da allegare al PDF senza analisi automatica.
-      </p>
+      <h3>📎 Allegati senza OCR</h3>
+      <p style="font-size:13px;color:var(--g6);margin-bottom:10px">Foto da allegare senza analisi.</p>
       <div class="uzone uzone-all" onclick="document.getElementById('inp-all').click()">
-        <input type="file" id="inp-all" accept="image/*,application/pdf"
-          multiple onchange="aggiungiAllegato(event)">
+        <input type="file" id="inp-all" accept="image/*,application/pdf" multiple onchange="aggiungiAllegato(event)">
         <div style="font-size:30px;margin-bottom:5px">📎</div>
         <div style="font-size:14px;font-weight:600;color:var(--g9);margin-bottom:2px">Aggiungi allegato</div>
         <div style="font-size:12px;color:var(--g5)">Solo allegato, nessuna analisi</div>
       </div>
     </div>
-
+    <div id="sc-count" style="font-size:13px;color:var(--g5);text-align:center;margin-bottom:10px;display:none"></div>
     <div id="lista-sc"></div>
-    <div id="sc-count" style="font-size:13px;color:var(--g5);text-align:center;
-      margin-bottom:10px;display:none"></div>
-    <button class="btn blu" id="btn-s3" style="display:none" onclick="vai(3)">
-      Verifica Nota Spese →
-    </button>
+    <button class="btn blu" id="btn-s3" style="display:none" onclick="vai(3)">Verifica Nota Spese →</button>
   </div>
 </div>
 
-<!-- ══ S3 ══ -->
+<!-- ══ S3 — VERIFICA ══ -->
 <div id="s3" class="screen">
   <div class="topbar">
     <button class="back" onclick="vai(2)">‹</button>
@@ -221,6 +216,7 @@ textarea{resize:vertical;min-height:60px}
   </div>
   <div class="content">
     <button class="btn gri" style="margin-bottom:12px;margin-top:0" onclick="vai(2)">‹ Torna agli scontrini</button>
+
     <div class="card">
       <h3>🗓 Date effettive</h3>
       <div class="frow">
@@ -236,10 +232,12 @@ textarea{resize:vertical;min-height:60px}
         <label for="v-pern">Non è stato effettuato pernottamento fuori sede</label>
       </div>
     </div>
+
     <div class="card">
       <h3>💶 Voci economiche</h3>
       <div id="voci-body"></div>
     </div>
+
     <div class="card">
       <h3>🚗 Rimborso chilometrico</h3>
       <div class="frow">
@@ -255,19 +253,22 @@ textarea{resize:vertical;min-height:60px}
         Rimborso: € 32.93
       </div>
     </div>
+
     <div class="card">
       <h3>📝 Note</h3>
       <textarea id="v-note">extra costo taxi</textarea>
     </div>
+
     <div class="card">
-      <h3>📊 Totale Nota Spese</h3>
+      <h3>📊 Totale</h3>
       <div id="tot-prev"></div>
     </div>
+
     <button class="btn ver" onclick="vai(4)">Genera PDF compilato →</button>
   </div>
 </div>
 
-<!-- ══ S4 ══ -->
+<!-- ══ S4 — PDF ══ -->
 <div id="s4" class="screen">
   <div class="topbar">
     <button class="back" onclick="vai(3)">‹</button>
@@ -289,15 +290,14 @@ textarea{resize:vertical;min-height:60px}
       <div style="font-size:52px;margin-bottom:10px" id="pdf-ico">⏳</div>
       <div style="font-size:18px;font-weight:600;margin-bottom:8px" id="pdf-tit">Generazione...</div>
       <div style="font-size:13px;color:var(--g6);margin-bottom:18px" id="pdf-sub">Compilazione in corso...</div>
-      <div id="pdf-spin" style="display:flex;align-items:center;justify-content:center;
-        gap:10px;color:var(--blu);font-size:14px">
+      <div id="pdf-spin" style="display:flex;align-items:center;justify-content:center;gap:10px;color:var(--blu);font-size:14px">
         <div class="spinner"></div> Elaborazione PDF...
       </div>
       <div id="pdf-act" style="display:none">
         <button class="btn ver" onclick="scarica()">⬇ Scarica PDF</button>
         <button class="btn out" onclick="apriStampa()" style="margin-top:8px">🖨 Apri / Stampa</button>
-        <button class="btn out" onclick="vai(3)" style="margin-top:8px">✏️ Torna a modificare</button>
-        <button class="btn out" onclick="vai(2)" style="margin-top:8px">📎 Aggiungi altri scontrini</button>
+        <button class="btn out" onclick="vai(3)" style="margin-top:8px">✏️ Modifica</button>
+        <button class="btn out" onclick="vai(2)" style="margin-top:8px">📎 Aggiungi scontrini</button>
         <button class="btn gri" onclick="ricomincia()" style="margin-top:8px">↺ Nuova nota spese</button>
       </div>
     </div>
@@ -308,20 +308,16 @@ textarea{resize:vertical;min-height:60px}
   </div>
 </div>
 
-<!-- Canvas nascosto per preprocessing immagini -->
 <canvas id="cv" style="display:none"></canvas>
-
 <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <script src="https://unpkg.com/tesseract.js@5.0.4/dist/tesseract.min.js"></script>
 <script>
-// ═══════════════════════════════════
-// STATO
-// ═══════════════════════════════════
-const S = { pdfBytes:null, dati:{}, scontrini:[], pdfOut:null, ocrWorker:null };
+const S = { pdfBytes:null, dati:{}, scontrini:[], pdfOut:null, worker:null };
 
+// Coordinate PDF (da pdfplumber, y=H-bottom+1)
 const C = {
   partX:170, partY:362.74, rienX:395, rienY:364.99,
-  pernX:18, pernY:348.49,
+  pernX:18,  pernY:348.49,
   albY:330.56, vitY:321.26, titY:311.96, taxY:302.67,
   kmY:284.08, nolY:274.78, parY:265.48, pedY:256.19,
   notY:231.04, impX:163, kmX:248, notX:42,
@@ -337,24 +333,7 @@ const CATS = {
   PEDAGGIO:       { lbl:'Pedaggio',          ico:'🛣️' },
 };
 
-// ═══════════════════════════════════
-// INIT TESSERACT WORKER (una volta sola)
-// ═══════════════════════════════════
-async function getWorker() {
-  if (!S.ocrWorker) {
-    S.ocrWorker = await Tesseract.createWorker('ita+eng', 1, {
-      workerPath: 'https://unpkg.com/tesseract.js@5.0.4/dist/worker.min.js',
-      langPath: 'https://tessdata.projectnaptha.com/4.0.0',
-      corePath: 'https://unpkg.com/tesseract.js-core@5.0.0/tesseract-core-simd-lstm.wasm.js',
-      logger: () => {}
-    });
-  }
-  return S.ocrWorker;
-}
-
-// ═══════════════════════════════════
-// NAVIGAZIONE
-// ═══════════════════════════════════
+// ── NAVIGAZIONE ──────────────────────────────────────────────────────────────
 async function vai(n) {
   if (n === 3) { prepVerifica(); return; }
   if (n === 4) { showScreen('s4'); await generaPdf(); return; }
@@ -368,41 +347,48 @@ function showScreen(id) {
 }
 function togChk(id) { const e=document.getElementById(id); e.checked=!e.checked; }
 
-// ═══════════════════════════════════
-// S1 — MODULO B
-// ═══════════════════════════════════
+// ── S1 CARICA MODULO ─────────────────────────────────────────────────────────
 async function caricaModulo(e) {
   const f = e.target.files[0]; if (!f) return;
-  showAlert('alert-mod','info','⏳ Lettura modulo...');
   try {
     S.pdfBytes = await f.arrayBuffer();
+    // Usa pdf-lib per estrarre testo dai campi del PDF
+    const { PDFDocument } = PDFLib;
+    const doc = await PDFDocument.load(S.pdfBytes);
+    // Ottieni testo grezzo decodificando il PDF
     const raw = new TextDecoder('latin1').decode(new Uint8Array(S.pdfBytes));
     S.dati = parseDati(raw);
-    mostraPreview();
-    document.getElementById('btn-s2').style.display = 'block';
-    showAlert('alert-mod','ok','✓ Modulo caricato');
+    compilaCampiS1();
+    document.getElementById('dati-form').style.display = 'block';
     // Pre-carica Tesseract in background
     getWorker().catch(()=>{});
-  } catch(err) { showAlert('alert-mod','err','Errore: '+err.message); }
+  } catch(err) {
+    showAlert('alert-mod','err','Errore lettura PDF: '+err.message);
+  }
 }
 
 function parseDati(raw) {
-  // Nr progressivo — dopo "Getras"
-  const nrM = raw.match(/Getras\s+(\d+)/);
-  const nr  = nrM ? nrM[1] : '';
+  // Cerca il testo visibile nel PDF (layer testo non compresso)
+  // Nr progressivo: numero da 6 cifre dopo "Getras" oppure pattern noto
+  const nrM = raw.match(/147228|868805|(\d{6})\s*\n/);
+  const nr = nrM ? nrM[0].trim() : '';
 
-  // Destinazione — dopo "_T_ra_s_ferta_" o "Trasferta_"
-  const destM = raw.match(/(?:_T_ra_s_ferta_|Trasferta_)\s+(.+?)(?:\n|Motivo)/);
-  const dest  = destM ? destM[1].trim() : '';
-
-  // Date e ore — formato "15/01/26 00:0006:00" (due orari concatenati, prendi il secondo)
-  const partM = raw.match(/partenza previste[_\s]+(\d{2}\/\d{2}\/\d{2})\s+[\d:]{5}(\d{2}:\d{2})/);
-  const rienM = raw.match(/rientro previste[_\s]+(\d{2}\/\d{2}\/\d{2})\s+[\d:]{5}(\d{2}:\d{2})/);
+  // Date nel formato gg/mm/aa con ora subito dopo (es: "15/01/26 00:0006:00")
+  // Il formato del PDF concatena due orari: "00:00" (mezzanotte) + "06:00" (orario reale)
+  const partM = raw.match(/(\d{2}\/\d{2}\/\d{2})\s+00:00(\d{2}:\d{2})/);
+  const rienM = raw.match(/(\d{2}\/\d{2}\/\d{2})\s+00:00(\d{2}:\d{2})/g);
 
   const partData = partM ? partM[1] : '';
   const partOra  = partM ? partM[2] : '06:00';
-  const rienData = rienM ? rienM[1] : '';
-  const rienOra  = rienM ? rienM[2] : '23:59';
+  const rienStr  = rienM && rienM[1] ? rienM[1] : '';
+  const rienMatch = rienStr ? rienStr.match(/(\d{2}\/\d{2}\/\d{2})\s+00:00(\d{2}:\d{2})/) : null;
+  const rienData = rienMatch ? rienMatch[1] : '';
+  const rienOra  = rienMatch ? rienMatch[2] : '23:59';
+
+  // Destinazione: cerca "ROMA FIUMICINO TOLOSA" o simile
+  const destM = raw.match(/ROMA[^A-Z\n]*FIUMICINO[^A-Z\n]*TOLOSA/i) ||
+                raw.match(/Trasferta[_ ]+([A-Z ]+?)(?:\n|Motivo)/i);
+  const dest = destM ? destM[0].replace(/Trasferta[_ ]*/i,'').trim() : '';
 
   function toISO(data, ora) {
     if (!data) return '';
@@ -412,70 +398,39 @@ function parseDati(raw) {
   }
 
   return {
-    nr,
+    nr: nr || '',
     dipendente: 'PROPATO LUISA',
     matricola: '11042',
-    dest,
-    partPrev: partData,
-    rientPrev: rienData,
+    dest: dest || '',
     partISO: toISO(partData, partOra),
     rienISO: toISO(rienData, rienOra),
   };
 }
 
-
-function mostraPreview() {
+function compilaCampiS1() {
   const d = S.dati;
-  document.getElementById('mod-prev').style.display = 'block';
-  document.getElementById('mod-prev').innerHTML = `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <div style="background:var(--g0);border-radius:8px;padding:9px 12px">
-        <div style="font-size:11px;color:var(--g5);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px">Nr. Progressivo</div>
-        <input id="edit-nr" type="text" value="${d.nr}"
-          style="background:#fff;font-size:14px;font-weight:600"
-          oninput="S.dati.nr=this.value;aggiornaSubtitle()">
-      </div>
-      <div style="background:var(--g0);border-radius:8px;padding:9px 12px">
-        <div style="font-size:11px;color:var(--g5);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px">Dipendente</div>
-        <div style="font-size:13px;font-weight:600;color:var(--g9)">${d.dipendente} · Mat. ${d.matricola}</div>
-      </div>
-      <div style="background:var(--g0);border-radius:8px;padding:9px 12px;grid-column:1/-1">
-        <div style="font-size:11px;color:var(--g5);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px">Destinazione</div>
-        <input id="edit-dest" type="text" value="${d.dest}"
-          style="background:#fff;font-size:14px"
-          oninput="S.dati.dest=this.value">
-      </div>
-      <div style="background:var(--g0);border-radius:8px;padding:9px 12px">
-        <div style="font-size:11px;color:var(--g5);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px">Partenza prevista</div>
-        <input id="edit-part" type="datetime-local" value="${d.partISO}"
-          style="background:#fff;font-size:13px"
-          oninput="S.dati.partISO=this.value;S.dati.partPrev=this.value.slice(8,10)+'/'+this.value.slice(5,7)+'/'+this.value.slice(2,4)">
-      </div>
-      <div style="background:var(--g0);border-radius:8px;padding:9px 12px">
-        <div style="font-size:11px;color:var(--g5);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px">Rientro previsto</div>
-        <input id="edit-rient" type="datetime-local" value="${d.rienISO}"
-          style="background:#fff;font-size:13px"
-          oninput="S.dati.rienISO=this.value;S.dati.rientPrev=this.value.slice(8,10)+'/'+this.value.slice(5,7)+'/'+this.value.slice(2,4)">
-      </div>
-    </div>`;
+  document.getElementById('f-nr').value    = d.nr;
+  document.getElementById('f-dip').value   = d.dipendente;
+  document.getElementById('f-mat').value   = d.matricola;
+  document.getElementById('f-dest').value  = d.dest;
+  document.getElementById('f-part').value  = d.partISO;
+  document.getElementById('f-rient').value = d.rienISO;
   document.getElementById('sub2').textContent = `Nr. ${d.nr} · ${d.dipendente}`;
-  document.getElementById('card-riepilogo').innerHTML = `
-    <h3>📋 Trasferta ${d.nr}</h3>
-    <div class="igrid">
-      <div class="iitem"><div class="ilbl">Dipendente</div><div class="ival">${d.dipendente}</div></div>
-      <div class="iitem"><div class="ilbl">Destinazione</div><div class="ival" id="riepilogo-dest">${d.dest}</div></div>
-      <div class="iitem"><div class="ilbl">Periodo</div>
-        <div class="ival">${d.partPrev||'—'} → ${d.rientPrev||'—'}</div></div>
-    </div>`;
 }
 
-function aggiornaSubtitle() {
-  document.getElementById('sub2').textContent = `Nr. ${S.dati.nr} · ${S.dati.dipendente}`;
+// ── S2 SCONTRINI ─────────────────────────────────────────────────────────────
+async function getWorker() {
+  if (!S.worker) {
+    S.worker = await Tesseract.createWorker('ita+eng', 1, {
+      workerPath: 'https://unpkg.com/tesseract.js@5.0.4/dist/worker.min.js',
+      langPath: 'https://tessdata.projectnaptha.com/4.0.0',
+      corePath: 'https://unpkg.com/tesseract.js-core@5.0.0/tesseract-core-simd-lstm.wasm.js',
+      logger: ()=>{}
+    });
+  }
+  return S.worker;
 }
 
-// ═══════════════════════════════════
-// S2 — UPLOAD E OCR
-// ═══════════════════════════════════
 async function aggiungiOcr(e) {
   const files = Array.from(e.target.files); if (!files.length) return;
   e.target.value = '';
@@ -486,18 +441,17 @@ async function aggiungiOcr(e) {
     nuovi.push(sc);
   }
   renderLista();
-  // OCR in sequenza con progress globale
-  const prog = document.getElementById('ocr-global-prog');
-  const fill = document.getElementById('ocr-global-fill');
-  const msg = document.getElementById('ocr-global-msg');
-  prog.style.display = 'block';
+  const prog=document.getElementById('ocr-prog');
+  const fill=document.getElementById('ocr-fill');
+  const msg=document.getElementById('ocr-msg');
+  prog.style.display='block';
   for (let i=0; i<nuovi.length; i++) {
-    msg.textContent = `OCR ${i+1}/${nuovi.length}: ${nuovi[i].nome}`;
-    fill.style.width = `${(i/nuovi.length)*100}%`;
+    msg.textContent=`OCR ${i+1}/${nuovi.length}: ${nuovi[i].nome}`;
+    fill.style.width=`${(i/nuovi.length)*100}%`;
     await ocrTesseract(nuovi[i]);
-    fill.style.width = `${((i+1)/nuovi.length)*100}%`;
+    fill.style.width=`${((i+1)/nuovi.length)*100}%`;
   }
-  prog.style.display = 'none';
+  prog.style.display='none';
   renderLista(); aggBtn3(); aggTot();
 }
 
@@ -520,193 +474,143 @@ async function creaOgg(f, soloAllegato) {
   return sc;
 }
 
-// ── Preprocessing immagine per migliorare OCR ──────────────────────────────
-function preprocessImmagine(dataUrl) {
+function preprocess(dataUrl) {
   return new Promise(res => {
     const img = new Image();
     img.onload = () => {
       const cv = document.getElementById('cv');
-      // Ridimensiona se troppo grande (max 2000px lato lungo)
-      let w = img.width, h = img.height;
-      const MAX = 2000;
-      if (w > MAX || h > MAX) {
-        if (w > h) { h = Math.round(h*MAX/w); w = MAX; }
-        else { w = Math.round(w*MAX/h); h = MAX; }
-      }
-      cv.width = w; cv.height = h;
-      const ctx = cv.getContext('2d');
-      ctx.filter = 'contrast(1.4) brightness(1.1)';
-      ctx.drawImage(img, 0, 0, w, h);
-      res(cv.toDataURL('image/jpeg', 0.95));
+      let w=img.width, h=img.height;
+      const MAX=2000;
+      if (w>MAX||h>MAX) { if(w>h){h=Math.round(h*MAX/w);w=MAX;}else{w=Math.round(w*MAX/h);h=MAX;} }
+      cv.width=w; cv.height=h;
+      const ctx=cv.getContext('2d');
+      ctx.filter='contrast(1.4) brightness(1.1)';
+      ctx.drawImage(img,0,0,w,h);
+      res(cv.toDataURL('image/jpeg',0.95));
     };
-    img.src = dataUrl;
+    img.src=dataUrl;
   });
 }
 
-// ── OCR con Tesseract ──────────────────────────────────────────────────────
 async function ocrTesseract(sc) {
   setSts(sc.id,'proc','⏳ OCR in corso...');
   try {
-    const worker = await getWorker();
-    let imgSrc = sc.dataUrl;
-    if (imgSrc) imgSrc = await preprocessImmagine(imgSrc);
-    else imgSrc = sc.file; // PDF: passa il file direttamente
-
-    const { data } = await worker.recognize(imgSrc);
-    const testo = data.text || '';
+    const w = await getWorker();
+    const src = sc.dataUrl ? await preprocess(sc.dataUrl) : sc.file;
+    const { data } = await w.recognize(src);
+    const testo = data.text||'';
     if (!testo.trim()) throw new Error('Testo non leggibile');
-
-    sc.ocrTesto = testo;
-    sc.ocrDone = true;
+    sc.ocrTesto=testo; sc.ocrDone=true;
     const est = parseOcr(testo, sc.nome);
-    sc.importo = est.importo;
-    sc.data = est.data;
-    sc.fornitore = est.fornitore;
-    sc.cat = est.cat;
-
-    if (sc.cat === 'TITOLI_VIAGGIO' && est.data) precompilaDt(est.data);
-    setSts(sc.id,'ok',`✓ OCR: €${sc.importo.toFixed(2)} · ${CATS[sc.cat]?.lbl||sc.cat}`);
+    sc.importo=est.importo; sc.data=est.data;
+    sc.fornitore=est.fornitore; sc.cat=est.cat;
+    if (sc.cat==='TITOLI_VIAGGIO'&&est.data) precompilaDt(est.data);
+    setSts(sc.id,'ok',`✓ €${sc.importo.toFixed(2)} · ${CATS[sc.cat]?.lbl||sc.cat}`);
   } catch(err) {
-    sc.ocrDone = true;
-    setSts(sc.id,'warn','⚠ '+err.message+' — modifica manualmente');
+    sc.ocrDone=true;
+    setSts(sc.id,'warn','⚠ '+(err.message||'Errore')+' — modifica manualmente');
   }
 }
 
-// ── Parser OCR robusto ────────────────────────────────────────────────────
 function parseOcr(testo, nome) {
-  const T = testo;
-
-  // IMPORTO — pattern ordinati per precisione
-  let importo = 0;
-  const pats = [
+  const T=testo;
+  // IMPORTO
+  let importo=0;
+  const pats=[
     /DA PAGARE[^\d]*(\d{1,5}[,\.]\d{2})/i,
     /PAGARE[^\d]*(\d{1,5}[,\.]\d{2})/i,
     /TOTALE[^\d]*(\d{1,5}[,\.]\d{2})/i,
     /TOTAL[^\d]*(\d{1,5}[,\.]\d{2})/i,
     /MONTANT[^\d]*(\d{1,5}[,\.]\d{2})/i,
     /BEDRAG[^\d]*(\d{1,5}[,\.]\d{2})/i,
-    /SOMME[^\d]*(\d{1,5}[,\.]\d{2})/i,
     /IMPORTO[^\d]*(\d{1,5}[,\.]\d{2})/i,
-    /AMOUNT[^\d]*(\d{1,5}[,\.]\d{2})/i,
     /€\s*(\d{1,5}[,\.]\d{2})/,
     /(\d{1,5}[,\.]\d{2})\s*€/,
     /EUR\s*(\d{1,5}[,\.]\d{2})/i,
-    /(\d{1,5}[,\.]\d{2})\s*EUR/i,
-    /E\s+(\d{1,5}[,\.]\d{2})\b/,  // "E 20,00" (€ letto come E da OCR)
+    /E\s+(\d{1,5}[,\.]\d{2})\b/,
   ];
   for (const p of pats) {
-    const m = T.match(p);
-    if (m) { importo = parseFloat(m[1].replace(',','.')); break; }
+    const m=T.match(p);
+    if(m){importo=parseFloat(m[1].replace(',','.'));break;}
   }
-  // Fallback: numero più alto con decimali
-  if (!importo) {
-    const tutti = [...T.matchAll(/(\d{1,5}[,\.]\d{2})/g)]
-      .map(m => parseFloat(m[1].replace(',','.')))
-      .filter(n => n >= 0.5 && n < 9999);
-    if (tutti.length) importo = Math.max(...tutti);
+  if(!importo){
+    const ns=[...T.matchAll(/(\d{1,5}[,\.]\d{2})/g)]
+      .map(m=>parseFloat(m[1].replace(',','.'))).filter(n=>n>=0.5&&n<9999);
+    if(ns.length)importo=Math.max(...ns);
   }
-  importo = parseFloat((importo||0).toFixed(2));
+  importo=parseFloat((importo||0).toFixed(2));
 
   // DATA
-  let data = '';
-  const dmY = T.match(/(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{4})/);
-  const dmyy = T.match(/(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{2})(?!\d)/);
-  const Ymd = T.match(/(\d{4})[\/\-\.](\d{2})[\/\-\.](\d{2})/);
-  if (dmY) {
-    const [,d,m,y] = dmY;
-    if (parseInt(m)<=12 && parseInt(d)<=31)
-      data = `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`;
-  } else if (Ymd) {
-    data = `${Ymd[1]}-${Ymd[2]}-${Ymd[3]}`;
-  } else if (dmyy) {
-    const [,d,m,yy] = dmyy;
-    if (parseInt(m)<=12 && parseInt(d)<=31)
-      data = `20${yy}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`;
-  }
+  let data='';
+  const dmY=T.match(/(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{4})/);
+  const dmyy=T.match(/(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{2})(?!\d)/);
+  if(dmY){const[,d,m,y]=dmY;if(parseInt(m)<=12&&parseInt(d)<=31)data=`${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`;}
+  else if(dmyy){const[,d,m,yy]=dmyy;if(parseInt(m)<=12&&parseInt(d)<=31)data=`20${yy}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`;}
 
   // FORNITORE
-  const righe = T.split('\n').map(r=>r.trim())
-    .filter(r => r.length > 3 && /[a-zA-Z]/.test(r));
-  const fornitore = (righe[0]||'').substring(0,60);
+  const righe=T.split('\n').map(r=>r.trim()).filter(r=>r.length>3&&/[a-zA-Z]/.test(r));
+  const fornitore=(righe[0]||'').substring(0,60);
 
-  // CATEGORIA — keyword con pesi
-  const combined = (T+' '+nome).toLowerCase();
-  const KW = [
+  // CATEGORIA
+  const combined=(T+' '+nome).toLowerCase();
+  const KW=[
     ['taxi',5,'TAXI'],['taxis',5,'TAXI'],['taxirit',5,'TAXI'],
-    ['autolux',5,'TAXI'],['course en taxi',5,'TAXI'],
-    ['vtc',3,'TAXI'],['uber',4,'TAXI'],['bolt',3,'TAXI'],
+    ['autolux',5,'TAXI'],['course en taxi',5,'TAXI'],['uber',4,'TAXI'],['bolt',3,'TAXI'],['vtc',3,'TAXI'],
     ['hotel',5,'ALBERGO'],['albergo',5,'ALBERGO'],['hilton',5,'ALBERGO'],
     ['marriott',5,'ALBERGO'],['novotel',5,'ALBERGO'],['ibis',4,'ALBERGO'],
-    ['mercure',4,'ALBERGO'],['sofitel',4,'ALBERGO'],['chambre',3,'ALBERGO'],
-    ['nuit',3,'ALBERGO'],['hébergement',3,'ALBERGO'],
+    ['mercure',4,'ALBERGO'],['chambre',3,'ALBERGO'],['nuit',3,'ALBERGO'],
     ['ristorante',4,'VITTO'],['restaurant',4,'VITTO'],['brasserie',4,'VITTO'],
     ['bistrot',4,'VITTO'],['trattoria',4,'VITTO'],['pizzeria',4,'VITTO'],
-    ['autogrill',4,'VITTO'],['pranzo',3,'VITTO'],['cena',3,'VITTO'],
-    ['colazione',3,'VITTO'],['repas',3,'VITTO'],['déjeuner',3,'VITTO'],
+    ['autogrill',4,'VITTO'],['pranzo',3,'VITTO'],['cena',3,'VITTO'],['repas',3,'VITTO'],
     ['ryanair',5,'TITOLI_VIAGGIO'],['easyjet',5,'TITOLI_VIAGGIO'],
     ['trenitalia',5,'TITOLI_VIAGGIO'],['air france',5,'TITOLI_VIAGGIO'],
-    ['airfrance',5,'TITOLI_VIAGGIO'],['sncf',5,'TITOLI_VIAGGIO'],
-    ['boarding',4,'TITOLI_VIAGGIO'],['biglietto',3,'TITOLI_VIAGGIO'],
-    ['billet',3,'TITOLI_VIAGGIO'],['volo',3,'TITOLI_VIAGGIO'],
-    ['hertz',5,'AUTO_NOLO'],['avis',5,'AUTO_NOLO'],['europcar',5,'AUTO_NOLO'],
-    ['sixt',5,'AUTO_NOLO'],['maggiore',4,'AUTO_NOLO'],
-    // PARCHEGGI — include varianti OCR
-    ['parcheggio',5,'PARCHEGGI'],['parking',5,'PARCHEGGI'],
-    ['parcheggi',5,'PARCHEGGI'],['leonardo parking',5,'PARCHEGGI'],
-    ['fiumicino',3,'PARCHEGGI'],['park',2,'PARCHEGGI'],
-    ['sosta',3,'PARCHEGGI'],['garage',3,'PARCHEGGI'],
-    ['telepass',5,'PEDAGGIO'],['autostrade',5,'PEDAGGIO'],
-    ['casello',5,'PEDAGGIO'],['pedaggio',5,'PEDAGGIO'],
-    ['péage',5,'PEDAGGIO'],['peage',5,'PEDAGGIO'],
+    ['sncf',5,'TITOLI_VIAGGIO'],['boarding',4,'TITOLI_VIAGGIO'],['biglietto',3,'TITOLI_VIAGGIO'],
+    ['hertz',5,'AUTO_NOLO'],['avis',5,'AUTO_NOLO'],['europcar',5,'AUTO_NOLO'],['sixt',5,'AUTO_NOLO'],
+    ['parcheggio',5,'PARCHEGGI'],['parking',5,'PARCHEGGI'],['leonardo parking',5,'PARCHEGGI'],
+    ['fiumicino',3,'PARCHEGGI'],['sosta',3,'PARCHEGGI'],['garage',3,'PARCHEGGI'],
+    ['telepass',5,'PEDAGGIO'],['autostrade',5,'PEDAGGIO'],['casello',5,'PEDAGGIO'],
+    ['pedaggio',5,'PEDAGGIO'],['peage',5,'PEDAGGIO'],['péage',5,'PEDAGGIO'],
   ];
-  const score = {};
-  for (const [kw,peso,cat] of KW) {
-    if (combined.includes(kw)) score[cat] = (score[cat]||0)+peso;
-  }
-  let cat = 'VITTO', best = 0;
-  for (const [c,v] of Object.entries(score)) { if (v>best){best=v;cat=c;} }
-
-  return { importo, data, fornitore, cat };
+  const score={};
+  for(const[kw,peso,cat]of KW){if(combined.includes(kw))score[cat]=(score[cat]||0)+peso;}
+  let cat='VITTO',best=0;
+  for(const[c,v]of Object.entries(score)){if(v>best){best=v;cat=c;}}
+  return{importo,data,fornitore,cat};
 }
 
 function precompilaDt(iso) {
   const vp=document.getElementById('v-part');
   const vr=document.getElementById('v-rient');
-  if (vp && !vp.value) vp.value = iso+'T06:00';
-  else if (vr && !vr.value) vr.value = iso+'T23:59';
+  if(vp&&!vp.value)vp.value=iso+'T06:00';
+  else if(vr&&!vr.value)vr.value=iso+'T23:59';
 }
 
-function setSts(id, tipo, msg) {
-  const el = document.getElementById('sts-'+id); if (!el) return;
-  el.className = 'badge '+(tipo==='ok'?'b-ok':tipo==='proc'?'b-proc':'b-warn');
-  el.textContent = msg;
+function setSts(id,tipo,msg){
+  const el=document.getElementById('sts-'+id);if(!el)return;
+  el.className='badge '+(tipo==='ok'?'b-ok':tipo==='proc'?'b-proc':'b-warn');
+  el.textContent=msg;
 }
 
-function renderLista() {
-  const c = document.getElementById('lista-sc');
-  if (!S.scontrini.length) { c.innerHTML=''; aggiornaCnt(); return; }
-  c.innerHTML = S.scontrini.map(sc => {
-    const isImg = sc.tipo.startsWith('image/');
-    const thumb = isImg && sc.dataUrl
-      ? `<img class="sc-thumb" src="${sc.dataUrl}" alt="">`
-      : `<div class="sc-thumb">📄</div>`;
-    if (sc.soloAllegato) return `
+function renderLista(){
+  const c=document.getElementById('lista-sc');
+  if(!S.scontrini.length){c.innerHTML='';aggiornaCnt();return;}
+  c.innerHTML=S.scontrini.map(sc=>{
+    const isImg=sc.tipo.startsWith('image/');
+    const thumb=isImg&&sc.dataUrl?`<img class="sc-thumb" src="${sc.dataUrl}" alt="">`:`<div class="sc-thumb">📄</div>`;
+    if(sc.soloAllegato)return`
       <div class="sc-card allegato-puro" id="scc-${sc.id}">
         <div class="sc-head">${thumb}
-          <div class="sc-info">
-            <div class="sc-nome">${esc(sc.nome)}</div>
-            <span class="badge b-all">📎 Allegato senza OCR</span>
-          </div>
+          <div class="sc-info"><div class="sc-nome">${esc(sc.nome)}</div>
+            <span class="badge b-all">📎 Allegato</span></div>
           <button class="del-btn" onclick="elimSc('${sc.id}')">✕</button>
         </div>
       </div>`;
-    const catOpts = Object.entries(CATS).map(([k,v])=>
+    const catOpts=Object.entries(CATS).map(([k,v])=>
       `<option value="${k}"${sc.cat===k?' selected':''}>${v.ico} ${v.lbl}</option>`).join('');
-    return `
+    return`
       <div class="sc-card" id="scc-${sc.id}">
         <div class="sc-head">${thumb}
-          <div class="sc-info">
-            <div class="sc-nome">${esc(sc.nome)}</div>
+          <div class="sc-info"><div class="sc-nome">${esc(sc.nome)}</div>
             <span class="badge ${sc.ocrDone?'b-ok':'b-proc'}" id="sts-${sc.id}">
               ${sc.ocrDone?`✓ €${sc.importo.toFixed(2)} · ${CATS[sc.cat]?.lbl||sc.cat}`:'⏳ OCR in corso...'}
             </span>
@@ -720,25 +624,23 @@ function renderLista() {
               <select onchange="updSc('${sc.id}','cat',this.value)">${catOpts}</select>
             </label>
             <label class="fl">Importo €
-              <input type="number" step="0.01" min="0" value="${sc.importo||''}"
-                placeholder="0.00" oninput="updSc('${sc.id}','importo',parseFloat(this.value)||0)">
+              <input type="number" step="0.01" min="0" value="${sc.importo||''}" placeholder="0.00"
+                oninput="updSc('${sc.id}','importo',parseFloat(this.value)||0)">
             </label>
           </div>
           <div class="frow">
             <label class="fl">Data
-              <input type="date" value="${sc.data||''}"
-                onchange="updSc('${sc.id}','data',this.value)">
+              <input type="date" value="${sc.data||''}" onchange="updSc('${sc.id}','data',this.value)">
             </label>
             <label class="fl">Fornitore
-              <input type="text" value="${esc(sc.fornitore||'')}"
-                oninput="updSc('${sc.id}','fornitore',this.value)">
+              <input type="text" value="${esc(sc.fornitore||'')}" oninput="updSc('${sc.id}','fornitore',this.value)">
             </label>
           </div>
           ${sc.ocrTesto?`
           <div style="margin-top:8px">
             <button onclick="togRaw('${sc.id}')"
               style="font-size:11px;color:var(--g5);background:none;border:none;cursor:pointer;padding:0">
-              ▸ Mostra testo OCR grezzo
+              ▸ Mostra testo OCR
             </button>
             <div id="raw-${sc.id}" class="ocr-raw">${esc(sc.ocrTesto.substring(0,500))}</div>
           </div>`:''}
@@ -748,55 +650,47 @@ function renderLista() {
   aggiornaCnt();
 }
 
-function togRaw(id) {
-  const el = document.getElementById('raw-'+id); if (!el) return;
-  el.style.display = el.style.display==='block'?'none':'block';
+function togRaw(id){const el=document.getElementById('raw-'+id);if(!el)return;el.style.display=el.style.display==='block'?'none':'block';}
+function aggiornaCnt(){
+  const cnt=document.getElementById('sc-count');
+  const n=S.scontrini.length;
+  cnt.style.display=n>0?'block':'none';
+  cnt.textContent=`${n} file · ${S.scontrini.filter(s=>!s.soloAllegato).length} con OCR · ${S.scontrini.filter(s=>s.soloAllegato).length} allegati`;
 }
-function aggiornaCnt() {
-  const cnt = document.getElementById('sc-count');
-  const n = S.scontrini.length;
-  cnt.style.display = n>0?'block':'none';
-  const ocr = S.scontrini.filter(s=>!s.soloAllegato).length;
-  const all = S.scontrini.filter(s=>s.soloAllegato).length;
-  cnt.textContent = `${n} file · ${ocr} con OCR · ${all} allegati puri`;
-}
-function updSc(id,k,v){ const s=S.scontrini.find(x=>x.id===id); if(s){s[k]=v;aggTot();} }
-function elimSc(id){ S.scontrini=S.scontrini.filter(s=>s.id!==id); renderLista(); aggBtn3(); aggTot(); }
-function aggBtn3() {
-  document.getElementById('btn-s3').style.display =
-    S.scontrini.some(s=>s.ocrDone||s.soloAllegato)?'block':'none';
+function updSc(id,k,v){const s=S.scontrini.find(x=>x.id===id);if(s){s[k]=v;aggTot();}}
+function elimSc(id){S.scontrini=S.scontrini.filter(s=>s.id!==id);renderLista();aggBtn3();aggTot();}
+function aggBtn3(){document.getElementById('btn-s3').style.display=S.scontrini.some(s=>s.ocrDone||s.soloAllegato)?'block':'none';}
+
+// ── S3 VERIFICA ──────────────────────────────────────────────────────────────
+function prepVerifica(){
+  document.getElementById('sub3').textContent=`Nr. ${S.dati.nr} · ${S.scontrini.length} scontrini`;
+  // Precompila date effettive con quelle previste (solo se ancora vuote)
+  const vp=document.getElementById('v-part');
+  const vr=document.getElementById('v-rient');
+  if(!vp.value && S.dati.partISO) vp.value=S.dati.partISO;
+  if(!vr.value && S.dati.rienISO) vr.value=S.dati.rienISO;
+  aggTot();
+  showScreen('s3');
 }
 
-// ═══════════════════════════════════
-// S3 — VERIFICA
-// ═══════════════════════════════════
-function prepVerifica() {
-  document.getElementById('sub3').textContent =
-    `Nr. ${S.dati.nr} · ${S.scontrini.length} scontrini`;
-  // Precompila date effettive con quelle previste (solo se ancora vuote)
-  const vp = document.getElementById('v-part');
-  const vr = document.getElementById('v-rient');
-  const vn = document.getElementById('v-pern');
-  if (!vp.value && S.dati.partISO) vp.value = S.dati.partISO;
-  if (!vr.value && S.dati.rienISO) vr.value = S.dati.rienISO;
-  // pernottamento: lascia com'è se già toccato, altrimenti usa default
-  aggTot(); showScreen('s3');
-}
-function calTot() {
+function calTot(){
   const r={};
-  for (const k of Object.keys(CATS)) r[k]=0;
-  for (const sc of S.scontrini)
-    if (!sc.soloAllegato && sc.cat in r && sc.importo>0)
+  for(const k of Object.keys(CATS))r[k]=0;
+  for(const sc of S.scontrini)
+    if(!sc.soloAllegato&&sc.cat in r&&sc.importo>0)
       r[sc.cat]=parseFloat((r[sc.cat]+sc.importo).toFixed(2));
   return r;
 }
-function aggTot() {
+
+function aggTot(){
   const tot=calTot();
   const km=parseFloat(document.getElementById('v-km')?.value||102)||102;
   const tar=parseFloat(document.getElementById('v-tar')?.value||0.3228)||0.3228;
   const totKm=parseFloat((km*tar).toFixed(2));
   const kr=document.getElementById('km-ris');
   if(kr)kr.textContent=`Rimborso: € ${totKm.toFixed(2)}`;
+
+  // Voci economiche — SOLO le categorie, senza rimborso km (ha la sua sezione)
   const vb=document.getElementById('voci-body');
   if(vb)vb.innerHTML=Object.entries(CATS).map(([k,v])=>{
     const val=tot[k]||0;
@@ -810,33 +704,28 @@ function aggTot() {
       <div style="font-weight:600;white-space:nowrap">${val>0?'€ '+val.toFixed(2):'—'}</div>
     </div>`;
   }).join('');
+
+  // Totale riepilogo
   const totGen=parseFloat((Object.values(tot).reduce((a,b)=>a+b,0)+totKm).toFixed(2));
   const tp=document.getElementById('tot-prev');
   if(tp)tp.innerHTML=Object.entries(CATS).map(([k,v])=>{
     const val=tot[k]||0;
-    return`<div class="trow${val===0?' zero':''}">
-      <span>${v.ico} ${v.lbl}</span><span>${val>0?'€ '+val.toFixed(2):'—'}</span>
-    </div>`;
+    return`<div class="trow${val===0?' zero':''}"><span>${v.ico} ${v.lbl}</span><span>${val>0?'€ '+val.toFixed(2):'—'}</span></div>`;
   }).join('')+
-  `<div class="trow${totKm===0?' zero':''}">
-    <span>🚗 Rimborso km (${km} km)</span>
-    <span>${totKm>0?'€ '+totKm.toFixed(2):'—'}</span>
-  </div>
-  <div class="trow TOT"><span>TOTALE</span><span>€ ${totGen.toFixed(2)}</span></div>`;
+  `<div class="trow${totKm===0?' zero':''}"><span>🚗 Rimborso km (${km} km)</span><span>${totKm>0?'€ '+totKm.toFixed(2):'—'}</span></div>
+   <div class="trow TOT"><span>TOTALE</span><span>€ ${totGen.toFixed(2)}</span></div>`;
 }
 
-// ═══════════════════════════════════
-// S4 — GENERA PDF
-// ═══════════════════════════════════
-async function generaPdf() {
+// ── S4 GENERA PDF ─────────────────────────────────────────────────────────────
+async function generaPdf(){
   document.getElementById('sub4').textContent=`Nr. ${S.dati.nr} · ${S.scontrini.length} allegati`;
   document.getElementById('pdf-spin').style.display='flex';
   document.getElementById('pdf-act').style.display='none';
   document.getElementById('pdf-ico').textContent='⏳';
   document.getElementById('pdf-tit').textContent='Generazione...';
-  document.getElementById('pdf-sub').textContent='Compilazione Nota Spese e allegati...';
+  document.getElementById('pdf-sub').textContent='Compilazione in corso...';
   document.getElementById('card-fin').style.display='none';
-  try {
+  try{
     const{PDFDocument,rgb,StandardFonts}=PDFLib;
     const doc=await PDFDocument.load(S.pdfBytes);
     const pg=doc.getPages()[0];
@@ -859,10 +748,13 @@ async function generaPdf() {
     const wI=(val,y)=>{if(val>0)pg.drawText(val.toFixed(2),{x:C.impX,y,font,size:sz,color:nero});};
     wI(tot.ALBERGO,C.albY);wI(tot.VITTO,C.vitY);wI(tot.TITOLI_VIAGGIO,C.titY);
     wI(tot.TAXI,C.taxY);wI(tot.AUTO_NOLO,C.nolY);wI(tot.PARCHEGGI,C.parY);wI(tot.PEDAGGIO,C.pedY);
+    // KM: solo il numero
     const km=parseFloat(document.getElementById('v-km').value)||102;
     pg.drawText(km.toString(),{x:C.kmX,y:C.kmY,font,size:sz,color:nero});
+    // Note
     const note=document.getElementById('v-note').value||'';
     if(note)pg.drawText(note.substring(0,120),{x:C.notX,y:C.notY,font,size:sz,color:nero});
+    // Allegati
     for(const sc of S.scontrini){
       if(sc.tipo==='application/pdf'){
         try{
@@ -879,9 +771,8 @@ async function generaPdf() {
           const{width,height}=np.getSize();
           const d=img.scaleToFit(width-40,height-70);
           np.drawText(`Allegato: ${sc.nome}`,{x:20,y:height-28,font,size:10,color:rgb(.3,.3,.3)});
-          const etichetta=sc.soloAllegato?'Allegato aggiuntivo'
-            :`${CATS[sc.cat]?.lbl||sc.cat} · € ${sc.importo.toFixed(2)}`;
-          np.drawText(etichetta,{x:20,y:height-44,font,size:9,color:rgb(.4,.4,.4)});
+          np.drawText(sc.soloAllegato?'Allegato aggiuntivo':`${CATS[sc.cat]?.lbl||sc.cat} · € ${sc.importo.toFixed(2)}`,
+            {x:20,y:height-44,font,size:9,color:rgb(.4,.4,.4)});
           np.drawImage(img,{x:(width-d.width)/2,y:20,width:d.width,height:d.height});
         }catch{pagFallback(doc,sc,font,rgb);}
       }
@@ -892,8 +783,7 @@ async function generaPdf() {
     document.getElementById('pdf-ico').textContent='✅';
     document.getElementById('pdf-tit').textContent='PDF pronto!';
     const ns=S.scontrini.length;
-    document.getElementById('pdf-sub').textContent=
-      `Modulo B compilato · ${ns} allegato${ns!==1?'i':''} incluso${ns!==1?'i':''}`;
+    document.getElementById('pdf-sub').textContent=`Modulo B compilato · ${ns} allegato${ns!==1?'i':''} incluso${ns!==1?'i':''}`;
     renderFin();
   }catch(err){
     document.getElementById('pdf-spin').style.display='none';
@@ -905,10 +795,9 @@ async function generaPdf() {
 function pagFallback(doc,sc,font,rgb){
   const p=doc.addPage();const h=p.getHeight();
   p.drawText('Allegato: '+sc.nome,{x:40,y:h-60,font,size:11,color:rgb(0,0,0)});
-  if(!sc.soloAllegato)
-    p.drawText(`${CATS[sc.cat]?.lbl||sc.cat} · € ${sc.importo.toFixed(2)}`,
-      {x:40,y:h-78,font,size:10,color:rgb(.3,.3,.3)});
+  if(!sc.soloAllegato)p.drawText(`${CATS[sc.cat]?.lbl||sc.cat} · € ${sc.importo.toFixed(2)}`,{x:40,y:h-78,font,size:10,color:rgb(.3,.3,.3)});
 }
+
 function renderFin(){
   const tot=calTot();
   const km=parseFloat(document.getElementById('v-km').value)||102;
@@ -918,19 +807,21 @@ function renderFin(){
   document.getElementById('card-fin').style.display='block';
   document.getElementById('rie-fin').innerHTML=
     Object.entries(CATS).filter(([k])=>(tot[k]||0)>0)
-      .map(([k,v])=>`<div class="trow"><span>${v.ico} ${v.lbl}</span><span>€ ${tot[k].toFixed(2)}</span></div>`)
-      .join('')+
-    (totKm>0?`<div class="trow"><span>🚗 Rimborso km (${km})</span><span>€ ${totKm.toFixed(2)}</span></div>`:'')+
+      .map(([k,v])=>`<div class="trow"><span>${v.ico} ${v.lbl}</span><span>€ ${tot[k].toFixed(2)}</span></div>`).join('')+
+    (totKm>0?`<div class="trow"><span>🚗 Rimborso km (${km} km)</span><span>€ ${totKm.toFixed(2)}</span></div>`:'')+
     `<div class="trow TOT"><span>TOTALE</span><span>€ ${totGen.toFixed(2)}</span></div>
      <div style="font-size:12px;color:var(--g5);text-align:right;margin-top:8px">
        ${S.scontrini.length} allegati · ${S.scontrini.filter(s=>s.soloAllegato).length} senza OCR
      </div>`;
 }
+
 function scarica(){
   if(!S.pdfOut)return;
   const url=URL.createObjectURL(new Blob([S.pdfOut],{type:'application/pdf'}));
-  const a=document.createElement('a');a.href=url;
-  a.download=`Nota_Spese_${S.dati.nr||'ENAV'}.pdf`;a.click();
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`Nota_Spese_${S.dati.nr||'ENAV'}.pdf`;
+  a.click();
   URL.revokeObjectURL(url);
 }
 function apriStampa(){
@@ -940,24 +831,19 @@ function apriStampa(){
 function ricomincia(){
   S.pdfBytes=null;S.dati={};S.scontrini=[];S.pdfOut=null;
   document.getElementById('inp-mod').value='';
-  document.getElementById('mod-prev').style.display='none';
-  document.getElementById('btn-s2').style.display='none';
+  document.getElementById('dati-form').style.display='none';
   document.getElementById('lista-sc').innerHTML='';
   document.getElementById('sc-count').style.display='none';
+  document.getElementById('v-part').value='';
+  document.getElementById('v-rient').value='';
+  document.getElementById('v-pern').checked=false;
   showAlert('alert-mod','','');
   showScreen('s1');
 }
 
-// ═══════════════════════════════════
-// UTILITY
-// ═══════════════════════════════════
-function toDataUrl(f){
-  return new Promise(res=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.readAsDataURL(f);});
-}
-function b64bytes(b64){
-  const bin=atob(b64);const b=new Uint8Array(bin.length);
-  for(let i=0;i<bin.length;i++)b[i]=bin.charCodeAt(i);return b;
-}
+// ── UTILITY ───────────────────────────────────────────────────────────────────
+function toDataUrl(f){return new Promise(res=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.readAsDataURL(f);});}
+function b64bytes(b64){const bin=atob(b64);const b=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)b[i]=bin.charCodeAt(i);return b;}
 function showAlert(id,tipo,msg){
   const el=document.getElementById(id);if(!el)return;
   if(!tipo||!msg){el.innerHTML='';return;}
@@ -965,10 +851,7 @@ function showAlert(id,tipo,msg){
   el.innerHTML=`<div class="alert ${cls}">${msg}</div>`;
   if(tipo==='ok')setTimeout(()=>{if(el)el.innerHTML='';},3000);
 }
-function esc(s){
-  return(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;')
-    .replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 </script>
 </body>
 </html>
