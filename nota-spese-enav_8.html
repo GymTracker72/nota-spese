@@ -464,19 +464,27 @@ function eliminaTrasferta(id) {
 }
 
 async function syncAvvio() {
-  setSyncLbl('⟳ Sync...');
-  const remoto = await gistCarica();
-  if(remoto&&remoto.trasferte){
-    const locale=dbLoad();
-    const m={};
-    for(const t of (locale.trasferte||[])) m[t.id]=t;
-    for(const t of (remoto.trasferte||[])){
-      if(!m[t.id]||new Date(t.aggiornata)>new Date(m[t.id].aggiornata||0)) m[t.id]=t;
-    }
-    dbSave({trasferte:Object.values(m)});
-    setSyncLbl('✓ Sync');
-  } else { setSyncLbl('✓'); }
+  // Mostra subito lo storico locale senza aspettare la rete
   renderS0();
+  try {
+    setSyncLbl('⟳ Sync...');
+    const remoto = await gistCarica();
+    if(remoto&&remoto.trasferte){
+      const locale=dbLoad();
+      const m={};
+      for(const t of (locale.trasferte||[])) m[t.id]=t;
+      for(const t of (remoto.trasferte||[])){
+        if(!m[t.id]||new Date(t.aggiornata)>new Date(m[t.id].aggiornata||0)) m[t.id]=t;
+      }
+      dbSave({trasferte:Object.values(m)});
+      setSyncLbl('✓ Sync');
+      renderS0(); // aggiorna con dati remoti
+    } else {
+      setSyncLbl('');
+    }
+  } catch(e) {
+    setSyncLbl('');
+  }
   setTimeout(()=>setSyncLbl(''),3000);
 }
 function setSyncLbl(t){const e=document.getElementById('sync-lbl');if(e)e.textContent=t;}
