@@ -910,14 +910,14 @@ async function generaPdf(){
     } else {
       S.pdfAllegati = null;
     }
-    // PDF 1: solo modulo compilato (senza allegati)
-  S.pdfModulo = await doc.save();
-  S.pdfOut = S.pdfModulo; // compatibilità
-
-  // PDF 2: solo allegati
+    // PDF 2: solo allegati (dichiarato prima per evitare errori di scope)
   const docAll = await PDFDocument.create();
   const fontAll = await docAll.embedFont(StandardFonts.Helvetica);
   let hasAllegati = false;
+
+  // PDF 1: solo modulo compilato (senza allegati)
+  S.pdfModulo = await doc.save();
+  S.pdfOut = S.pdfModulo; // compatibilità
     document.getElementById('pdf-spin').style.display='none';
     document.getElementById('pdf-act').style.display='block';
     // Nascondi sezione allegati se non ci sono
