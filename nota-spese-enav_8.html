@@ -39,7 +39,8 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-se
 .card h3{font-size:14px;font-weight:600;color:var(--g9);margin-bottom:12px}
 .btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:13px 18px;
   border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;border:none;
-  width:100%;margin-top:8px}
+  width:100%;margin-top:8px;touch-action:manipulation;-webkit-tap-highlight-color:rgba(0,0,0,.1);
+  user-select:none;-webkit-user-select:none}
 .blu{background:var(--blu);color:#fff}
 .ver{background:var(--ver);color:#fff}
 .out{background:#fff;color:var(--blu);border:1.5px solid var(--blu)}
@@ -108,7 +109,7 @@ input[readonly]{background:var(--g0);color:var(--g5)}
     <span id="sync-lbl" style="font-size:11px;opacity:.8"></span>
   </div>
   <div class="content">
-    <button class="btn blu" style="margin-bottom:16px;margin-top:0" onclick="nuovaTrasferta()">+ Nuova nota spese</button>
+    <button class="btn blu" style="margin-bottom:16px;margin-top:0" onclick="nuovaTrasferta()" ontouchstart="" style="cursor:pointer">+ Nuova nota spese</button>
     <div id="s0-lista"></div>
   </div>
 </div>
@@ -464,8 +465,6 @@ function eliminaTrasferta(id) {
 }
 
 async function syncAvvio() {
-  // Mostra subito lo storico locale senza aspettare la rete
-  renderS0();
   try {
     setSyncLbl('⟳ Sync...');
     const remoto = await gistCarica();
@@ -951,7 +950,10 @@ function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').repla
 // INIT
 // ═══════════════════════════════════════════════════════
 S.tid='';
-syncAvvio();
+// Mostra subito UI senza aspettare nulla
+renderS0();
+// Poi sync in background
+setTimeout(()=>syncAvvio(), 100);
 </script>
 </body>
 </html>
