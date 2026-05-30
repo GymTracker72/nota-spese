@@ -158,6 +158,7 @@ textarea{resize:vertical;min-height:60px}
     <div class="step"><div class="sdot">4</div><div class="slbl">PDF</div></div>
   </div>
   <div class="content">
+    <button class="btn gri" style="margin-bottom:12px;margin-top:0" onclick="vai(1)">‹ Torna al Modulo B</button>
     <div id="alert-sc"></div>
     <div class="card" id="card-riepilogo"></div>
 
@@ -219,6 +220,7 @@ textarea{resize:vertical;min-height:60px}
     <div class="step"><div class="sdot">4</div><div class="slbl">PDF</div></div>
   </div>
   <div class="content">
+    <button class="btn gri" style="margin-bottom:12px;margin-top:0" onclick="vai(2)">‹ Torna agli scontrini</button>
     <div class="card">
       <h3>🗓 Date effettive</h3>
       <div class="frow">
@@ -281,6 +283,7 @@ textarea{resize:vertical;min-height:60px}
     <div class="step"><div class="sdot active">4</div><div class="slbl">PDF</div></div>
   </div>
   <div class="content">
+    <button class="btn gri" style="margin-bottom:12px;margin-top:0" onclick="vai(3)">‹ Torna alla verifica</button>
     <div id="alert-pdf"></div>
     <div class="card" style="text-align:center;padding:30px 18px">
       <div style="font-size:52px;margin-bottom:10px" id="pdf-ico">⏳</div>
@@ -384,36 +387,90 @@ async function caricaModulo(e) {
 }
 
 function parseDati(raw) {
-  const dates = [...raw.matchAll(/(\d{2}\/\d{2}\/\d{2})/g)].map(m=>m[1]);
+  // Nr progressivo — dopo "Getras"
+  const nrM = raw.match(/Getras\s+(\d+)/);
+  const nr  = nrM ? nrM[1] : '';
+
+  // Destinazione — dopo "_T_ra_s_ferta_" o "Trasferta_"
+  const destM = raw.match(/(?:_T_ra_s_ferta_|Trasferta_)\s+(.+?)(?:\n|Motivo)/);
+  const dest  = destM ? destM[1].trim() : '';
+
+  // Date e ore — formato "15/01/26 00:0006:00" (due orari concatenati, prendi il secondo)
+  const partM = raw.match(/partenza previste[_\s]+(\d{2}\/\d{2}\/\d{2})\s+[\d:]{5}(\d{2}:\d{2})/);
+  const rienM = raw.match(/rientro previste[_\s]+(\d{2}\/\d{2}\/\d{2})\s+[\d:]{5}(\d{2}:\d{2})/);
+
+  const partData = partM ? partM[1] : '';
+  const partOra  = partM ? partM[2] : '06:00';
+  const rienData = rienM ? rienM[1] : '';
+  const rienOra  = rienM ? rienM[2] : '23:59';
+
+  function toISO(data, ora) {
+    if (!data) return '';
+    const p = data.split('/');
+    if (p.length !== 3) return '';
+    return '20'+p[2]+'-'+p[1].padStart(2,'0')+'-'+p[0].padStart(2,'0')+'T'+ora;
+  }
+
   return {
-    nr: (raw.match(/147228/) || raw.match(/(\d{6,8})/))?.[0] || '147228',
-    dipendente:'PROPATO LUISA', matricola:'11042',
-    dest:'ROMA FIUMICINO TOLOSA',
-    partPrev: dates[0]||'15/01/26', rientPrev: dates[1]||'16/01/26',
+    nr,
+    dipendente: 'PROPATO LUISA',
+    matricola: '11042',
+    dest,
+    partPrev: partData,
+    rientPrev: rienData,
+    partISO: toISO(partData, partOra),
+    rienISO: toISO(rienData, rienOra),
   };
 }
+
 
 function mostraPreview() {
   const d = S.dati;
   document.getElementById('mod-prev').style.display = 'block';
   document.getElementById('mod-prev').innerHTML = `
-    <div class="igrid">
-      <div class="iitem"><div class="ilbl">Nr. Progressivo</div><div class="ival">${d.nr}</div></div>
-      <div class="iitem"><div class="ilbl">Dipendente</div><div class="ival">${d.dipendente}</div></div>
-      <div class="iitem"><div class="ilbl">Matricola</div><div class="ival">${d.matricola}</div></div>
-      <div class="iitem"><div class="ilbl">Destinazione</div><div class="ival">${d.dest}</div></div>
-      <div class="iitem"><div class="ilbl">Partenza prevista</div><div class="ival">${d.partPrev}</div></div>
-      <div class="iitem"><div class="ilbl">Rientro previsto</div><div class="ival">${d.rientPrev}</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="background:var(--g0);border-radius:8px;padding:9px 12px">
+        <div style="font-size:11px;color:var(--g5);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px">Nr. Progressivo</div>
+        <input id="edit-nr" type="text" value="${d.nr}"
+          style="background:#fff;font-size:14px;font-weight:600"
+          oninput="S.dati.nr=this.value;aggiornaSubtitle()">
+      </div>
+      <div style="background:var(--g0);border-radius:8px;padding:9px 12px">
+        <div style="font-size:11px;color:var(--g5);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px">Dipendente</div>
+        <div style="font-size:13px;font-weight:600;color:var(--g9)">${d.dipendente} · Mat. ${d.matricola}</div>
+      </div>
+      <div style="background:var(--g0);border-radius:8px;padding:9px 12px;grid-column:1/-1">
+        <div style="font-size:11px;color:var(--g5);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px">Destinazione</div>
+        <input id="edit-dest" type="text" value="${d.dest}"
+          style="background:#fff;font-size:14px"
+          oninput="S.dati.dest=this.value">
+      </div>
+      <div style="background:var(--g0);border-radius:8px;padding:9px 12px">
+        <div style="font-size:11px;color:var(--g5);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px">Partenza prevista</div>
+        <input id="edit-part" type="datetime-local" value="${d.partISO}"
+          style="background:#fff;font-size:13px"
+          oninput="S.dati.partISO=this.value;S.dati.partPrev=this.value.slice(8,10)+'/'+this.value.slice(5,7)+'/'+this.value.slice(2,4)">
+      </div>
+      <div style="background:var(--g0);border-radius:8px;padding:9px 12px">
+        <div style="font-size:11px;color:var(--g5);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px">Rientro previsto</div>
+        <input id="edit-rient" type="datetime-local" value="${d.rienISO}"
+          style="background:#fff;font-size:13px"
+          oninput="S.dati.rienISO=this.value;S.dati.rientPrev=this.value.slice(8,10)+'/'+this.value.slice(5,7)+'/'+this.value.slice(2,4)">
+      </div>
     </div>`;
   document.getElementById('sub2').textContent = `Nr. ${d.nr} · ${d.dipendente}`;
   document.getElementById('card-riepilogo').innerHTML = `
     <h3>📋 Trasferta ${d.nr}</h3>
     <div class="igrid">
       <div class="iitem"><div class="ilbl">Dipendente</div><div class="ival">${d.dipendente}</div></div>
-      <div class="iitem"><div class="ilbl">Destinazione</div><div class="ival">${d.dest}</div></div>
+      <div class="iitem"><div class="ilbl">Destinazione</div><div class="ival" id="riepilogo-dest">${d.dest}</div></div>
       <div class="iitem"><div class="ilbl">Periodo</div>
-        <div class="ival">${d.partPrev} → ${d.rientPrev}</div></div>
+        <div class="ival">${d.partPrev||'—'} → ${d.rientPrev||'—'}</div></div>
     </div>`;
+}
+
+function aggiornaSubtitle() {
+  document.getElementById('sub2').textContent = `Nr. ${S.dati.nr} · ${S.dati.dipendente}`;
 }
 
 // ═══════════════════════════════════
@@ -716,6 +773,13 @@ function aggBtn3() {
 function prepVerifica() {
   document.getElementById('sub3').textContent =
     `Nr. ${S.dati.nr} · ${S.scontrini.length} scontrini`;
+  // Precompila date effettive con quelle previste (solo se ancora vuote)
+  const vp = document.getElementById('v-part');
+  const vr = document.getElementById('v-rient');
+  const vn = document.getElementById('v-pern');
+  if (!vp.value && S.dati.partISO) vp.value = S.dati.partISO;
+  if (!vr.value && S.dati.rienISO) vr.value = S.dati.rienISO;
+  // pernottamento: lascia com'è se già toccato, altrimenti usa default
   aggTot(); showScreen('s3');
 }
 function calTot() {
@@ -866,7 +930,7 @@ function scarica(){
   if(!S.pdfOut)return;
   const url=URL.createObjectURL(new Blob([S.pdfOut],{type:'application/pdf'}));
   const a=document.createElement('a');a.href=url;
-  a.download=`nota_spese_${S.dati.nr||'ENAV'}.pdf`;a.click();
+  a.download=`Nota_Spese_${S.dati.nr||'ENAV'}.pdf`;a.click();
   URL.revokeObjectURL(url);
 }
 function apriStampa(){
