@@ -98,6 +98,28 @@ input[readonly]{background:var(--g0);color:var(--g5)}
 .ns-card:active{background:var(--g0)}
 @keyframes spin{to{transform:rotate(360deg)}}
 .spinner{width:16px;height:16px;border:2px solid var(--blum);border-top-color:var(--blu);border-radius:50%;animation:spin .7s linear infinite}
+
+/* CROP MODAL */
+.crop-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1000;
+  flex-direction:column;align-items:center;justify-content:space-between;padding:16px}
+.crop-modal.open{display:flex}
+.crop-title{color:#fff;font-size:15px;font-weight:600;text-align:center;padding:8px 0}
+.crop-wrap{position:relative;flex:1;width:100%;max-width:700px;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;margin:8px 0}
+.crop-img{max-width:100%;max-height:100%;display:block;user-select:none;-webkit-user-select:none}
+.crop-box{position:absolute;border:2px solid #fff;box-shadow:0 0 0 9999px rgba(0,0,0,.5);
+  cursor:move;touch-action:none}
+.crop-handle{position:absolute;width:20px;height:20px;background:#fff;border-radius:50%;
+  border:2px solid var(--blu);touch-action:none;z-index:2}
+.crop-handle.tl{top:-10px;left:-10px;cursor:nwse-resize}
+.crop-handle.tr{top:-10px;right:-10px;cursor:nesw-resize}
+.crop-handle.bl{bottom:-10px;left:-10px;cursor:nesw-resize}
+.crop-handle.br{bottom:-10px;right:-10px;cursor:nwse-resize}
+.crop-btns{display:flex;gap:10px;width:100%;max-width:700px;padding-bottom:8px}
+.crop-btns button{flex:1;padding:13px;border-radius:8px;font-size:15px;font-weight:600;
+  cursor:pointer;border:none;touch-action:manipulation}
+.crop-cancel{background:rgba(255,255,255,.15);color:#fff}
+.crop-confirm{background:var(--ver);color:#fff}
 </style>
 </head>
 <body>
@@ -291,6 +313,25 @@ input[readonly]{background:var(--g0);color:var(--g5)}
 </div>
 
 <canvas id="cv" style="display:none"></canvas>
+<canvas id="cv-crop" style="display:none"></canvas>
+
+<!-- CROP MODAL -->
+<div id="crop-modal" class="crop-modal">
+  <div class="crop-title">Ritaglia lo scontrino</div>
+  <div class="crop-wrap" id="crop-wrap">
+    <img id="crop-img" class="crop-img" draggable="false">
+    <div id="crop-box" class="crop-box">
+      <div class="crop-handle tl" data-handle="tl"></div>
+      <div class="crop-handle tr" data-handle="tr"></div>
+      <div class="crop-handle bl" data-handle="bl"></div>
+      <div class="crop-handle br" data-handle="br"></div>
+    </div>
+  </div>
+  <div class="crop-btns">
+    <button class="crop-cancel" ontouchstart="" onclick="cropCancel()">✕ Annulla</button>
+    <button class="crop-confirm" ontouchstart="" onclick="cropConfirm()">✓ Ritaglia</button>
+  </div>
+</div>
 <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <script src="https://unpkg.com/tesseract.js@5.0.4/dist/tesseract.min.js"></script>
 <script>
@@ -732,7 +773,13 @@ function renderLista(){
               ${sc.confermato?'✓ Confermato':sc.ocrDone?`✓ €${sc.importo.toFixed(2)} · ${CATS[sc.cat]?.lbl||sc.cat}`:'⏳ OCR in corso...'}
             </span>
           </div>
-          <button class="del-btn" onclick="elimSc('${sc.id}')">✕</button>
+          <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0">
+            ${isImg&&sc.dataUrl?`<button onclick="apriCrop(S.scontrini.find(s=>s.id==='${sc.id}'))"
+              style="background:var(--blul);border:none;border-radius:6px;padding:5px 8px;
+              font-size:11px;color:var(--blu);cursor:pointer;white-space:nowrap;touch-action:manipulation"
+              ontouchstart="">✂ Ritaglia</button>`:''}
+            <button class="del-btn" style="padding:2px 6px" onclick="elimSc('${sc.id}')">✕</button>
+          </div>
         </div>
         ${sc.ocrDone?`
         <div class="sc-body">
@@ -984,6 +1031,162 @@ function scarica(){scaricaModulo();}
 function toDataUrl(f){return new Promise(res=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.readAsDataURL(f);});}
 function b64bytes(b64){const bin=atob(b64);const b=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)b[i]=bin.charCodeAt(i);return b;}
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// ═══════════════════════════════════════════════════════
+// RITAGLIO IMMAGINE
+// ═══════════════════════════════════════════════════════
+const CROP = {
+  sc: null,           // scontrino corrente
+  imgNat: {w:0,h:0},  // dimensioni naturali immagine
+  imgDisp: {x:0,y:0,w:0,h:0}, // posizione immagine nel modal
+  box: {x:20,y:20,w:0,h:0},   // posizione box ritaglio
+  drag: null,         // stato drag
+};
+
+function apriCrop(sc) {
+  CROP.sc = sc;
+  const modal = document.getElementById('crop-modal');
+  const img = document.getElementById('crop-img');
+  img.src = sc.dataUrl;
+  img.onload = () => {
+    CROP.imgNat = { w: img.naturalWidth, h: img.naturalHeight };
+    modal.classList.add('open');
+    setTimeout(initCropBox, 50);
+  };
+}
+
+function initCropBox() {
+  const img = document.getElementById('crop-img');
+  const wrap = document.getElementById('crop-wrap');
+  const r = img.getBoundingClientRect();
+  const wr = wrap.getBoundingClientRect();
+  CROP.imgDisp = { x: r.left - wr.left, y: r.top - wr.top, w: r.width, h: r.height };
+  // Box iniziale: 80% dell'immagine centrato
+  const pad = 0.1;
+  CROP.box = {
+    x: CROP.imgDisp.x + CROP.imgDisp.w * pad,
+    y: CROP.imgDisp.y + CROP.imgDisp.h * pad,
+    w: CROP.imgDisp.w * (1 - pad*2),
+    h: CROP.imgDisp.h * (1 - pad*2),
+  };
+  updateCropBox();
+  setupCropEvents();
+}
+
+function updateCropBox() {
+  const box = document.getElementById('crop-box');
+  box.style.left = CROP.box.x + 'px';
+  box.style.top = CROP.box.y + 'px';
+  box.style.width = CROP.box.w + 'px';
+  box.style.height = CROP.box.h + 'px';
+}
+
+function setupCropEvents() {
+  const box = document.getElementById('crop-box');
+  const wrap = document.getElementById('crop-wrap');
+
+  // Mouse events
+  box.addEventListener('mousedown', e => {
+    if (e.target.dataset.handle) return;
+    const startX=e.clientX, startY=e.clientY;
+    const origX=CROP.box.x, origY=CROP.box.y;
+    const onMove = ev => {
+      const id = CROP.imgDisp;
+      CROP.box.x = Math.max(id.x, Math.min(id.x+id.w-CROP.box.w, origX+(ev.clientX-startX)));
+      CROP.box.y = Math.max(id.y, Math.min(id.y+id.h-CROP.box.h, origY+(ev.clientY-startY)));
+      updateCropBox();
+    };
+    const onUp = () => { document.removeEventListener('mousemove',onMove); document.removeEventListener('mouseup',onUp); };
+    document.addEventListener('mousemove',onMove);
+    document.addEventListener('mouseup',onUp);
+    e.preventDefault();
+  });
+
+  // Touch events per spostamento box
+  box.addEventListener('touchstart', e => {
+    if (e.target.dataset.handle) return;
+    const t=e.touches[0];
+    const startX=t.clientX, startY=t.clientY;
+    const origX=CROP.box.x, origY=CROP.box.y;
+    const onMove = ev => {
+      const tt=ev.touches[0];
+      const id=CROP.imgDisp;
+      CROP.box.x = Math.max(id.x, Math.min(id.x+id.w-CROP.box.w, origX+(tt.clientX-startX)));
+      CROP.box.y = Math.max(id.y, Math.min(id.y+id.h-CROP.box.h, origY+(tt.clientY-startY)));
+      updateCropBox();
+      ev.preventDefault();
+    };
+    const onEnd = () => { box.removeEventListener('touchmove',onMove); box.removeEventListener('touchend',onEnd); };
+    box.addEventListener('touchmove',onMove,{passive:false});
+    box.addEventListener('touchend',onEnd);
+    e.preventDefault();
+  },{passive:false});
+
+  // Handle resize — mouse e touch
+  document.querySelectorAll('.crop-handle').forEach(h => {
+    const startResize = (startX, startY) => {
+      const type = h.dataset.handle;
+      const orig = {...CROP.box};
+      const onMove = (cx, cy) => {
+        const id = CROP.imgDisp;
+        let {x,y,w,h2} = {x:orig.x,y:orig.y,w:orig.w,h2:orig.h};
+        const dx=cx-startX, dy=cy-startY;
+        const MIN=60;
+        if(type==='tl'){ x=Math.min(orig.x+orig.w-MIN,orig.x+dx); y=Math.min(orig.y+orig.h-MIN,orig.y+dy); w=orig.w-dx; h2=orig.h-dy; }
+        if(type==='tr'){ y=Math.min(orig.y+orig.h-MIN,orig.y+dy); w=orig.w+dx; h2=orig.h-dy; }
+        if(type==='bl'){ x=Math.min(orig.x+orig.w-MIN,orig.x+dx); w=orig.w-dx; h2=orig.h+dy; }
+        if(type==='br'){ w=orig.w+dx; h2=orig.h+dy; }
+        CROP.box.x=Math.max(id.x,x); CROP.box.y=Math.max(id.y,y);
+        CROP.box.w=Math.max(MIN,Math.min(id.w-(CROP.box.x-id.x),w));
+        CROP.box.h=Math.max(MIN,Math.min(id.h-(CROP.box.y-id.y),h2));
+        updateCropBox();
+      };
+      return onMove;
+    };
+    // Mouse
+    h.addEventListener('mousedown', e => {
+      const onMove = startResize(e.clientX, e.clientY);
+      const mv = ev => onMove(ev.clientX, ev.clientY);
+      const up = () => { document.removeEventListener('mousemove',mv); document.removeEventListener('mouseup',up); };
+      document.addEventListener('mousemove',mv); document.addEventListener('mouseup',up);
+      e.stopPropagation(); e.preventDefault();
+    });
+    // Touch
+    h.addEventListener('touchstart', e => {
+      const t=e.touches[0];
+      const onMove = startResize(t.clientX, t.clientY);
+      const mv = ev => { onMove(ev.touches[0].clientX, ev.touches[0].clientY); ev.preventDefault(); };
+      const up = () => { h.removeEventListener('touchmove',mv); h.removeEventListener('touchend',up); };
+      h.addEventListener('touchmove',mv,{passive:false}); h.addEventListener('touchend',up);
+      e.stopPropagation(); e.preventDefault();
+    },{passive:false});
+  });
+}
+
+function cropConfirm() {
+  const sc = CROP.sc;
+  const img = document.getElementById('crop-img');
+  const id = CROP.imgDisp;
+  // Converti coordinate display → coordinate immagine naturale
+  const scaleX = CROP.imgNat.w / id.w;
+  const scaleY = CROP.imgNat.h / id.h;
+  const sx = (CROP.box.x - id.x) * scaleX;
+  const sy = (CROP.box.y - id.y) * scaleY;
+  const sw = CROP.box.w * scaleX;
+  const sh = CROP.box.h * scaleY;
+  // Disegna su canvas di crop
+  const cv = document.getElementById('cv-crop');
+  cv.width = sw; cv.height = sh;
+  const ctx = cv.getContext('2d');
+  ctx.drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
+  sc.dataUrl = cv.toDataURL('image/jpeg', 0.92);
+  document.getElementById('crop-modal').classList.remove('open');
+  renderLista();
+}
+
+function cropCancel() {
+  document.getElementById('crop-modal').classList.remove('open');
+}
 
 // ═══════════════════════════════════════════════════════
 // INIT
